@@ -1,0 +1,66 @@
+{
+  "name": "rehype-og-card",
+  "version": "0.0.0",
+  "description": "Rehype plugin to convert text links to link cards",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "provenance": true
+  },
+  "scripts": {
+    "test": "npx vitest",
+    "lint": "npx eslint ./src/**/*.ts",
+    "format": "npx prettier --write ./src/**/*",
+    "format:check": "npx prettier --check ./src/**/*",
+    "build": "npx tsc",
+    "version": "npm run build && git add .",
+    "ci:version": "changeset version && npm run version",
+    "ci:publish": "npm run build && changeset publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Robot-Inventor/rehype-og-card.git"
+  },
+  "keywords": [
+    "markdown",
+    "remark",
+    "ogp",
+    "unified",
+    "rehype",
+    "rehype-plugin"
+  ],
+  "author": "Robot-Inventor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Robot-Inventor/rehype-og-card/issues"
+  },
+  "homepage": "https://github.com/Robot-Inventor/rehype-og-card#readme",
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.7",
+    "@robot-inventor/eslint-config": "^0.2.21",
+    "@types/node": "^20.14.11",
+    "@types/sanitize-html": "^2.11.0",
+    "eslint": "^9.7.0",
+    "hast-util-to-html": "^9.0.1",
+    "prettier": "^3.3.3",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
+    "typescript": "^5.5.3",
+    "unified": "^11.0.5",
+    "vitest": "^2.0.3"
+  },
+  "dependencies": {
+    "@types/hast": "^3.0.4",
+    "hast-util-from-html": "^2.0.1",
+    "hast-util-is-element": "^3.0.0",
+    "open-graph-scraper": "^6.6.3",
+    "sanitize-html": "^2.13.0",
+    "unist-util-visit-parents": "^6.0.1"
+  }
+}
