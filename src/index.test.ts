@@ -5,6 +5,7 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
 import fs from "fs/promises";
+import path from "path";
 
 const processorFactory = (options?: RehypeOGCardOptions) => {
     return unified().use(remarkParse).use(remarkRehype).use(rehypeOGCard, options).use(rehypeStringify);
@@ -174,7 +175,7 @@ https://blog.google/products/android/world-emoji-day-2024/
 });
 
 it("server cache should work", async () => {
-    const serverCachePath = "./.cache/rehype-og-card/";
+    const serverCachePath = "./.cache/";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath });
@@ -189,12 +190,12 @@ https://blog.google/products/android/world-emoji-day-2024/
         <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
         <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
         <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="/.cache/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" alt="favicon" width="16" height="16">
+            <img class="rlc-favicon" loading="lazy" decoding="async" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" alt="favicon" width="16" height="16">
             <span class="rlc-url">blog.google</span>
         </div>
     </div>
     <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="/.cache/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" alt="/.cache/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png">
+        <img class="rlc-image" loading="lazy" decoding="async" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png">
     </div>
 </a></p>
     `.trim();
@@ -202,6 +203,6 @@ https://blog.google/products/android/world-emoji-day-2024/
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
-    const cache = await fs.readdir(serverCachePath);
+    const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(2);
 });
