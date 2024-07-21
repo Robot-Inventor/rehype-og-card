@@ -56,20 +56,19 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         visitParents<Root, string[]>(tree, ["element", "text"], (node, ancestors): void => {
             let anchorNode: AnchorElement | null = null;
 
-            if (node.type === "text" && isValidURL(node.value.trim())) {
+            const isBareLink = node.type === "text" && isValidURL(node.value.trim());
+            const isValidAnchor = isAnchorElement(node) && isValidURL(node.properties.href);
+
+            if (isBareLink) {
                 anchorNode = convertTextToAnchorElement(node);
-            } else if (
-                mergedOptions.enableSameTextURLConversion &&
-                isAnchorElement(node) &&
-                isValidURL(node.properties.href)
-            ) {
-                const isBareLink =
+            } else if (mergedOptions.enableSameTextURLConversion && isValidAnchor) {
+                const isSameTextURL =
                     // eslint-disable-next-line no-magic-numbers
                     node.children.length === 1 &&
                     isTextNode(node.children[0]) &&
                     node.children[0].value === node.properties.href;
 
-                if (!isBareLink) return;
+                if (!isSameTextURL) return;
 
                 anchorNode = node;
             } else {
