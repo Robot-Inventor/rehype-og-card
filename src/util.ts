@@ -40,7 +40,7 @@ interface RehypeOGCardOptions {
     serverCache?: boolean;
     /**
      * Path to save the server cache.
-     * @default "./public/rehype-og-card-cache/"
+     * @default "./public"
      */
     serverCachePath?: string;
     /* eslint-disable max-len */
@@ -255,7 +255,7 @@ const downloadImage = async (url: string, directly: string, userAgent: string): 
         await fs.mkdir(directly, { recursive: true });
         await fs.writeFile(savePath, buffer);
 
-        return savePath;
+        return filename;
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("[rehype-og-card] Error downloading image:", error);

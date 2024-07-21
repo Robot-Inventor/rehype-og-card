@@ -146,7 +146,7 @@ Whether to cache the OG data on the server.
 Path to save the server cache.
 
 - Type: `string`
-- Default: `"./public/rehype-og-card-cache/"`
+- Default: `"./public"`
 
 ### `shortenURL`
 

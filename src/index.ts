@@ -12,6 +12,7 @@ import {
 import type { Plugin, Transformer } from "unified";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
+import path from "path";
 import { visitParents } from "unist-util-visit-parents";
 
 const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
@@ -23,7 +24,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     excludeDomains: [] as const,
     loading: "lazy",
     serverCache: true,
-    serverCachePath: "./public/rehype-og-card-cache/",
+    serverCachePath: "./public",
     shortenURL: true
 } as const;
 
@@ -40,6 +41,8 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         ...DEFAULT_OPTIONS,
         ...options
     };
+
+    mergedOptions.serverCachePath = path.posix.join(mergedOptions.serverCachePath, "./rehype-og-card/");
 
     /**
      * Transform function to create OG card from bare links.
@@ -93,24 +96,24 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 if (!OGData) return;
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
-                    const cachePath = await downloadImage(
+                    const filename = await downloadImage(
                         OGData.OGImageURL,
                         mergedOptions.serverCachePath,
                         mergedOptions.crawlerUserAgent
                     );
-                    if (cachePath) {
-                        OGData.OGImageURL = `/${cachePath}`;
+                    if (filename) {
+                        OGData.OGImageURL = path.posix.join("/rehype-og-card", filename);
                     }
                 }
 
                 if (OGData.faviconURL && mergedOptions.serverCache) {
-                    const cachePath = await downloadImage(
+                    const filename = await downloadImage(
                         OGData.faviconURL,
                         mergedOptions.serverCachePath,
                         mergedOptions.crawlerUserAgent
                     );
-                    if (cachePath) {
-                        OGData.faviconURL = `/${cachePath}`;
+                    if (filename) {
+                        OGData.faviconURL = path.posix.join("/rehype-og-card", filename);
                     }
                 }
 
