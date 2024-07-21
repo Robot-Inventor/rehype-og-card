@@ -1,13 +1,6 @@
-import {
-    AnchorElement,
-    convertTextToAnchorElement,
-    downloadImage,
-    isAnchorElement,
-    isTextNode,
-    isValidURL
-} from "./util.js";
+import { AnchorElement, convertTextToAnchorElement, createOGCard, isAnchorElement, isTextNode } from "./util/hast.js";
 import type { Plugin, Transformer } from "unified";
-import { createOGCard, getOGData } from "./openGraphUtil.js";
+import { downloadImage, getOGData, isValidURL } from "./util/network.js";
 import { restoreBuildCache, saveBuildCache } from "./util/cache.js";
 import { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";

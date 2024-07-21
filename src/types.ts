@@ -57,4 +57,16 @@ interface RehypeOGCardOptions {
     /* eslint-enable max-len */
 }
 
-export { RehypeOGCardOptions };
+interface OGCardData {
+    url: string;
+    title: string;
+    description?: string;
+    displayURL: string;
+    faviconURL?: string;
+    OGImageURL?: string;
+    OGImageAlt?: string;
+    OGImageWidth?: number;
+    OGImageHeight?: number;
+}
+
+export { RehypeOGCardOptions, OGCardData };

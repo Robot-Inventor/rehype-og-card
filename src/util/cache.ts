@@ -1,4 +1,4 @@
-import { checkFileExists } from "../util.js";
+import { checkFileExists } from "./file.js";
 import fs from "fs/promises";
 import path from "path";
 
