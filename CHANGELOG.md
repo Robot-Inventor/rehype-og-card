@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 0.2.1
+
+### Patch Changes
+
+-   [#13](https://github.com/Robot-Inventor/rehype-og-card/pull/13) [`fd6f7e8`](https://github.com/Robot-Inventor/rehype-og-card/commit/fd6f7e88a2c5abfb17475d95bae282cf8da0e677) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: prevent converting URLs with non-HTTP(S) protocols
+
 ## 0.2.0
 
 ### Minor Changes
