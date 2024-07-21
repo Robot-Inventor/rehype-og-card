@@ -1,5 +1,17 @@
 # rehype-og-card
 
+## 0.3.0
+
+### Minor Changes
+
+-   [#19](https://github.com/Robot-Inventor/rehype-og-card/pull/19) [`90366c6`](https://github.com/Robot-Inventor/rehype-og-card/commit/90366c6aab7923bed9e74b14b63a400b388b24df) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add the build cache feature
+
+### Patch Changes
+
+-   [#15](https://github.com/Robot-Inventor/rehype-og-card/pull/15) [`926b1f9`](https://github.com/Robot-Inventor/rehype-og-card/commit/926b1f9452958876045fffaed8f1039f291655d9) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - docs: improve description for the `serverCachePath` option
+
+-   [#17](https://github.com/Robot-Inventor/rehype-og-card/pull/17) [`30324d4`](https://github.com/Robot-Inventor/rehype-og-card/commit/30324d456640ac90d48e5bcf632e57aa62ab8ce7) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: change to not download images if they have already exists
+
 ## 0.2.1
 
 ### Patch Changes
