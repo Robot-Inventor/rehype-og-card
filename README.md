@@ -58,24 +58,26 @@ https://blog.google/products/android/world-emoji-day-2024/
 main();
 ```
 
-Output:
+Output (formatted for readability):
 
 ```html
 <p>this is a link: https://blog.google/products/android/world-emoji-day-2024/</p>
 <p><code>https://blog.google/products/android/world-emoji-day-2024/</code></p>
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
-            <span class="rlc-url">blog.google</span>
+<p><div class="og-card-container">
+    <a href="https://blog.google/products/android/world-emoji-day-2024/">
+        <div class="og-card-info">
+            <div class="og-card-title">10 fun facts about emoji for World Emoji Day</div>
+            <div class="og-card-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
+            <div class="og-card-url-container">
+                <img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=blog.google" width="16">
+                <span class="og-card-url">blog.google</span>
+            </div>
         </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
-    </div>
-</a></p>
+        <div class="og-card-image-container">
+            <img class="og-card-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
+        </div>
+    </a>
+</div></p>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">https://blog.google/products/android/world-emoji-day-2024/</a></p>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">Google blog</a></p>
 ```
