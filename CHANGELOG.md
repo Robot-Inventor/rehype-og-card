@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 0.3.1
+
+### Patch Changes
+
+-   [#20](https://github.com/Robot-Inventor/rehype-og-card/pull/20) [`f4dae7b`](https://github.com/Robot-Inventor/rehype-og-card/commit/f4dae7b7f2b7690cd044bafa4b89299d52661340) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - docs: improve JSDoc comments of `RehypeOGCardOptions`
+
+-   [#22](https://github.com/Robot-Inventor/rehype-og-card/pull/22) [`dd82cb8`](https://github.com/Robot-Inventor/rehype-og-card/commit/dd82cb88240269594b5682a5cc2606a22312ae89) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: improve build cache implementation
+
 ## 0.3.0
 
 ### Minor Changes
