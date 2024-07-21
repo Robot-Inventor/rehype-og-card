@@ -80,9 +80,11 @@ const isAnchorElement = (node: unknown): node is AnchorElement =>
  * @returns `true` if the URL is valid, `false` otherwise.
  */
 const isValidURL = (url: string): boolean => {
+    const ALLOWED_PROTOCOLS = ["http:", "https:"];
+
     try {
-        new URL(url);
-        return true;
+        const { protocol } = new URL(url);
+        return ALLOWED_PROTOCOLS.includes(protocol.toLowerCase());
     } catch {
         return false;
     }

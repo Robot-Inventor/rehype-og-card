@@ -177,3 +177,18 @@ https://blog.google/products/android/world-emoji-day-2024/
     const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(2);
 });
+
+it("should not convert URLs with non-HTTP(S) protocols", async () => {
+    const processor = processorFactory({ serverCache: false });
+
+    const input = `
+mailto:info@example.com
+    `.trim();
+
+    const expected = `
+<p>mailto:info@example.com</p>
+    `.trim();
+
+    const result = await processor.process(input);
+    expect(result.toString().trim()).toBe(expected);
+});
