@@ -31,16 +31,20 @@ interface RehypeOGCardOptions {
     serverCache?: boolean;
     /**
      * Path to save the server cache.
+     * Specify the directory whose contents will be copied to the root.
+     * For example, for an Astro project, specify the `public` directory.
      * @default "./public"
      */
     serverCachePath?: string;
     /**
      * Whether to cache the OG metadata and images for the next build.
+     * `buildCache` option requires `serverCache` option to be enabled.
      * @default false
      */
     buildCache?: boolean;
     /**
      * Path to save the build cache.
+     * For Astro projects, specify the `./node_modules/.astro` directory.
      * @default "./node_modules/.cache"
      */
     buildCachePath?: string;
