@@ -1,10 +1,9 @@
-import type { Element, ElementContent, RootContent, Text } from "hast";
+import type { Element, ElementContent, Text } from "hast";
 import { createHash } from "crypto";
-import { fromHtml } from "hast-util-from-html";
 import fs from "fs/promises";
+import { h } from "hastscript";
 import { isElement } from "hast-util-is-element";
 import path from "path";
-import sanitizeHtml from "sanitize-html";
 import scraper from "open-graph-scraper";
 
 interface RehypeOGCardOptions {
@@ -127,11 +126,10 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             OGImageHeight: OGImage?.height,
             OGImageURL: OGImage?.url,
             OGImageWidth: OGImage?.width,
-            // eslint-disable-next-line no-undefined
-            description: result.ogDescription ? sanitizeHtml(result.ogDescription) : undefined,
+            description: result.ogDescription,
             displayURL: url,
             faviconURL,
-            title: result.ogTitle ? sanitizeHtml(result.ogTitle) : url,
+            title: result.ogTitle || url,
             url
         };
     } catch (error) {
@@ -139,21 +137,6 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
         console.error("[rehype-og-card] Error fetching OG data:", error);
         return null;
     }
-};
-
-/**
- * Sanitize HTML.
- * @param html HTML to sanitize.
- * @returns Sanitized HTML.
- */
-const sanitize = (html: string): string => {
-    const options = {
-        allowedAttributes: {},
-        allowedTags: [],
-        disallowedTagsMode: "recursiveEscape"
-        // eslint-disable-next-line no-magic-numbers
-    } as const satisfies Parameters<typeof sanitizeHtml>[1];
-    return sanitizeHtml(html, options);
 };
 
 /**
@@ -165,47 +148,38 @@ const sanitize = (html: string): string => {
 const createOGCard = (
     data: OGCardData,
     options: Required<{ loading: RehypeOGCardOptions["loading"]; decoding: RehypeOGCardOptions["decoding"] }>
-): RootContent[] => {
-    data.title = sanitize(data.title);
-    if (data.description) {
-        data.description = sanitize(data.description);
-    }
+): Element => {
+    const card = h("a.rlc-container", { href: data.url }, [
+        h("div.rlc-info", [
+            h("div.rlc-title", data.title),
+            data.description ? h("div.rlc-description", data.description) : null,
+            h("div.rlc-url-container", [
+                h("img.rlc-favicon", {
+                    alt: "favicon",
+                    decoding: options.decoding,
+                    height: 16,
+                    loading: options.loading,
+                    src: data.faviconURL,
+                    width: 16
+                }),
+                h("span.rlc-url", data.displayURL)
+            ])
+        ]),
+        data.OGImageURL
+            ? h("div.rlc-image-container", [
+                  h("img.rlc-image", {
+                      alt: data.OGImageAlt || data.OGImageURL,
+                      decoding: options.decoding,
+                      height: data.OGImageHeight,
+                      loading: options.loading,
+                      src: data.OGImageURL,
+                      width: data.OGImageWidth
+                  })
+              ])
+            : null
+    ]);
 
-    const imageContainerElement = data.OGImageURL
-        ? `
-    <div class="rlc-image-container">
-        <img class="rlc-image"
-            loading="${options.loading}"
-            decoding="${options.decoding}"
-            src="${data.OGImageURL}" alt="${data.OGImageAlt || data.OGImageURL}"
-            ${data.OGImageWidth ? `width="${data.OGImageWidth}"` : ""}
-            ${data.OGImageHeight ? `height="${data.OGImageHeight}"` : ""} >
-    </div>`
-        : "";
-
-    const descriptionElement = data.description
-        ? `
-        <div class="rlc-description">${data.description}</div>`
-        : "";
-
-    // The `loading` attribute must be specified before the `src` attribute because of a bug in Firefox.
-    // See https://bugzil.la/1647077 for more information.
-    const card = `
-<a class="rlc-container" href="${data.url}">
-    <div class="rlc-info">
-        <div class="rlc-title">${data.title}</div>${descriptionElement}
-        <div class="rlc-url-container">
-            <img class="rlc-favicon"
-                loading="${options.loading}"
-                decoding="${options.decoding}"
-                src="${data.faviconURL}" alt="favicon" width="16" height="16">
-            <span class="rlc-url">${data.displayURL}</span>
-        </div>
-    </div>${imageContainerElement}
-</a>
-    `.trim();
-
-    return fromHtml(card, { fragment: true }).children;
+    return card;
 };
 
 /**

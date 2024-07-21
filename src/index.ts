@@ -129,7 +129,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 // eslint-disable-next-line no-magic-numbers
                 if (index === -1) return;
                 // eslint-disable-next-line no-magic-numbers
-                ancestors[ancestors.length - 1].children.splice(index, 1, ...OGCard);
+                ancestors[ancestors.length - 1].children.splice(index, 1, OGCard);
             };
             linkCardPromises.push(linkCardPromise());
         });
