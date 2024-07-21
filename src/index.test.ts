@@ -29,19 +29,7 @@ https://blog.google/products/android/world-emoji-day-2024/
     const expected = `
 <p>this is a link: https://blog.google/products/android/world-emoji-day-2024/</p>
 <p><code>https://blog.google/products/android/world-emoji-day-2024/</code></p>
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
-            <span class="rlc-url">blog.google</span>
-        </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/"><div class="rlc-info"><div class="rlc-title">10 fun facts about emoji for World Emoji Day</div><div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=blog.google" width="16"><span class="rlc-url">blog.google</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png"></div></a></p>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">https://blog.google/products/android/world-emoji-day-2024/</a></p>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">Google blog</a></p>
     `.trim();
@@ -69,19 +57,7 @@ https://blog.google/products/android/world-emoji-day-2024/
 <h1>Title</h1>
 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum voluptates eos hic nobis optio inventore dolores cum repellat.</p>
 <p>Esse officia a perspiciatis nihil dolore quam doloremque distinctio iure beatae!</p>
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
-            <span class="rlc-url">blog.google</span>
-        </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/"><div class="rlc-info"><div class="rlc-title">10 fun facts about emoji for World Emoji Day</div><div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=blog.google" width="16"><span class="rlc-url">blog.google</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png"></div></a></p>
 <p><a href="https://example.com">This link</a> is a link to example.com and should not be converted to an OG card.</p>
     `.trim();
 
@@ -112,19 +88,7 @@ it("`enableSameTextURLConversion` option should convert same text URL to anchor 
     `.trim();
 
     const expected = `
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
-            <span class="rlc-url">blog.google</span>
-        </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/"><div class="rlc-info"><div class="rlc-title">10 fun facts about emoji for World Emoji Day</div><div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=blog.google" width="16"><span class="rlc-url">blog.google</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png"></div></a></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -156,15 +120,7 @@ https://example.com
     `.trim();
 
     const expected = `
-<p><a class="rlc-container" href="https://example.com">
-    <div class="rlc-info">
-        <div class="rlc-title">Example Domain</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="undefined" alt="favicon" width="16" height="16">
-            <span class="rlc-url">example.com</span>
-        </div>
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://example.com"><div class="rlc-info"><div class="rlc-title">Example Domain</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" width="16"><span class="rlc-url">example.com</span></div></div></a></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -194,19 +150,7 @@ https://blog.google/products/android/world-emoji-day-2024/
     `.trim();
 
     const expected = `
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
-            <span class="rlc-url">https://blog.google/products/android/world-emoji-day-2024/</span>
-        </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/"><div class="rlc-info"><div class="rlc-title">10 fun facts about emoji for World Emoji Day</div><div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=blog.google" width="16"><span class="rlc-url">https://blog.google/products/android/world-emoji-day-2024/</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png"></div></a></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -224,19 +168,7 @@ https://blog.google/products/android/world-emoji-day-2024/
     `.trim();
 
     const expected = `
-<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
-    <div class="rlc-info">
-        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
-        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
-        <div class="rlc-url-container">
-            <img class="rlc-favicon" loading="lazy" decoding="async" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" alt="favicon" width="16" height="16">
-            <span class="rlc-url">blog.google</span>
-        </div>
-    </div>
-    <div class="rlc-image-container">
-        <img class="rlc-image" loading="lazy" decoding="async" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png">
-    </div>
-</a></p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/"><div class="rlc-info"><div class="rlc-title">10 fun facts about emoji for World Emoji Day</div><div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" width="16"><span class="rlc-url">blog.google</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" decoding="async" loading="lazy" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png"></div></a></p>
     `.trim();
 
     const result = await processor.process(input);
