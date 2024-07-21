@@ -50,6 +50,45 @@ https://blog.google/products/android/world-emoji-day-2024/
     expect(result.toString().trim()).toBe(expected);
 });
 
+it("should work with general use cases", async () => {
+    const processor = processorFactory({ serverCache: false });
+
+    const input = `
+# Title
+
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum voluptates eos hic nobis optio inventore dolores cum repellat.
+
+Esse officia a perspiciatis nihil dolore quam doloremque distinctio iure beatae!
+
+https://blog.google/products/android/world-emoji-day-2024/
+
+[This link](https://example.com) is a link to example.com and should not be converted to an OG card.
+    `.trim();
+
+    const expected = `
+<h1>Title</h1>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum voluptates eos hic nobis optio inventore dolores cum repellat.</p>
+<p>Esse officia a perspiciatis nihil dolore quam doloremque distinctio iure beatae!</p>
+<p><a class="rlc-container" href="https://blog.google/products/android/world-emoji-day-2024/">
+    <div class="rlc-info">
+        <div class="rlc-title">10 fun facts about emoji for World Emoji Day</div>
+        <div class="rlc-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div>
+        <div class="rlc-url-container">
+            <img class="rlc-favicon" loading="lazy" decoding="async" src="https://www.google.com/s2/favicons?domain=blog.google" alt="favicon" width="16" height="16">
+            <span class="rlc-url">blog.google</span>
+        </div>
+    </div>
+    <div class="rlc-image-container">
+        <img class="rlc-image" loading="lazy" decoding="async" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
+    </div>
+</a></p>
+<p><a href="https://example.com">This link</a> is a link to example.com and should not be converted to an OG card.</p>
+    `.trim();
+
+    const result = await processor.process(input);
+    expect(result.toString().trim()).toBe(expected);
+});
+
 it("should not create OG card from invalid URLs", async () => {
     const processor = processorFactory({ serverCache: false });
 
