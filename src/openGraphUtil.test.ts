@@ -1,5 +1,5 @@
 import { toHtml } from "hast-util-to-html";
-import { createOGCard, isValidURL, OGCardData } from "./util";
+import { createOGCard, OGCardData } from "./openGraphUtil";
 import { expect, it } from "vitest";
 
 it("should sanitize HTML in OG card", async () => {
