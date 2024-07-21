@@ -202,6 +202,20 @@ const convertTextToAnchorElement = (text: Text): AnchorElement =>
     }) as const satisfies AnchorElement;
 
 /**
+ * Check if the file exists.
+ * @param filePath Path to check.
+ * @returns `true` if the file exists, `false` otherwise.
+ */
+const checkFileExists = async (filePath: string): Promise<boolean> => {
+    try {
+        await fs.access(filePath);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+/**
  * Download image from given URL.
  * @param url URL to download image.
  * @param directly Path to save the image.
@@ -217,6 +231,16 @@ const downloadImage = async (url: string, directly: string, userAgent: string): 
     }
 
     try {
+        const hash = createHash("sha256").update(url).digest("hex");
+        const filename = hash + path.extname(new URL(url).pathname);
+        const savePath = path.posix.join(directly, filename);
+
+        // If the file already exists, return the filename.
+        const fileExists = await checkFileExists(savePath);
+        if (fileExists) {
+            return filename;
+        }
+
         const response = await fetch(url, {
             headers: {
                 "user-agent": userAgent
@@ -225,10 +249,6 @@ const downloadImage = async (url: string, directly: string, userAgent: string): 
 
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-
-        const hash = createHash("sha256").update(url).digest("hex");
-        const filename = hash + path.extname(new URL(url).pathname);
-        const savePath = path.posix.join(directly, filename);
 
         await fs.mkdir(directly, { recursive: true });
         await fs.writeFile(savePath, buffer);
