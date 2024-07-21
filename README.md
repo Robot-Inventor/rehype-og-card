@@ -145,7 +145,7 @@ Whether to cache the OG data on the server.
 
 ### `serverCachePath`
 
-Path to save the server cache.
+Path to save the server cache. Specify the directory whose contents will be copied to the root. For example, for an Astro project, specify the `public` directory.
 
 - Type: `string`
 - Default: `"./public"`
