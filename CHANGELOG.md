@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 0.3.2
+
+### Patch Changes
+
+-   [#27](https://github.com/Robot-Inventor/rehype-og-card/pull/27) [`0fe1c4c`](https://github.com/Robot-Inventor/rehype-og-card/commit/0fe1c4ce3c7020bdb40e06b52df546bbe857c07e) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - test: add tests for network utility
+
+-   [#25](https://github.com/Robot-Inventor/rehype-og-card/pull/25) [`6a34d92`](https://github.com/Robot-Inventor/rehype-og-card/commit/6a34d920811acef7bdea82a140ae509bd7f4b78b) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - refactor: refactor utilities
+
 ## 0.3.1
 
 ### Patch Changes
