@@ -149,34 +149,36 @@ const createOGCard = (
     data: OGCardData,
     options: Required<{ loading: RehypeOGCardOptions["loading"]; decoding: RehypeOGCardOptions["decoding"] }>
 ): Element => {
-    const card = h("a.rlc-container", { href: data.url }, [
-        h("div.rlc-info", [
-            h("div.rlc-title", data.title),
-            data.description ? h("div.rlc-description", data.description) : null,
-            h("div.rlc-url-container", [
-                h("img.rlc-favicon", {
-                    alt: "favicon",
-                    decoding: options.decoding,
-                    height: 16,
-                    loading: options.loading,
-                    src: data.faviconURL,
-                    width: 16
-                }),
-                h("span.rlc-url", data.displayURL)
-            ])
-        ]),
-        data.OGImageURL
-            ? h("div.rlc-image-container", [
-                  h("img.rlc-image", {
-                      alt: data.OGImageAlt || data.OGImageURL,
-                      decoding: options.decoding,
-                      height: data.OGImageHeight,
-                      loading: options.loading,
-                      src: data.OGImageURL,
-                      width: data.OGImageWidth
-                  })
-              ])
-            : null
+    const card = h("div.og-card-container", [
+        h("a", { href: data.url }, [
+            h("div.og-card-info", [
+                h("div.og-card-title", data.title),
+                data.description ? h("div.og-card-description", data.description) : null,
+                h("div.og-card-url-container", [
+                    h("img.og-card-favicon", {
+                        alt: "favicon",
+                        decoding: options.decoding,
+                        height: 16,
+                        loading: options.loading,
+                        src: data.faviconURL,
+                        width: 16
+                    }),
+                    h("span.og-card-url", data.displayURL)
+                ])
+            ]),
+            data.OGImageURL
+                ? h("div.og-card-image-container", [
+                      h("img.og-card-image", {
+                          alt: data.OGImageAlt || data.OGImageURL,
+                          decoding: options.decoding,
+                          height: data.OGImageHeight,
+                          loading: options.loading,
+                          src: data.OGImageURL,
+                          width: data.OGImageWidth
+                      })
+                  ])
+                : null
+        ])
     ]);
 
     return card;

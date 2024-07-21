@@ -18,7 +18,7 @@ it("should sanitize HTML in OG card", async () => {
     } as const satisfies Parameters<typeof createOGCard>[1];
 
     const expected = `
-<a class="rlc-container" href="https://example.com"><div class="rlc-info"><div class="rlc-title">Hello, &#x3C;script>alert('world');&#x3C;/script></div><div class="rlc-description">&#x3C;b>World&#x3C;/b></div><div class="rlc-url-container"><img class="rlc-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://example.com/favicon.ico" width="16"><span class="rlc-url">example.com</span></div></div><div class="rlc-image-container"><img class="rlc-image" alt="https://example.com/image.jpg" decoding="async" loading="lazy" src="https://example.com/image.jpg"></div></a>
+<div class="og-card-container"><a href="https://example.com"><div class="og-card-info"><div class="og-card-title">Hello, &#x3C;script>alert('world');&#x3C;/script></div><div class="og-card-description">&#x3C;b>World&#x3C;/b></div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://example.com/favicon.ico" width="16"><span class="og-card-url">example.com</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="https://example.com/image.jpg" decoding="async" loading="lazy" src="https://example.com/image.jpg"></div></a></div>
     `.trim();
 
     const result = toHtml(createOGCard(OGData, options));
