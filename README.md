@@ -2,20 +2,20 @@
 
 Rehype plugin to convert text links to link cards inspired by [remark-link-card](https://github.com/gladevise/remark-link-card). Bare links are converted to link cards, but not links in lists or non-bare links.
 
-| Features                                       |                                     remark-link-card                                      |      rehype-og-card       |
-| :--------------------------------------------- | :---------------------------------------------------------------------------------------: | :-----------------------: |
-| Plugin type                                    |                                          Remark                                           |          Rehype           |
-| TypeScript support                             |                                             ❌                                             |             ✅             |
-| Convert bare links to link cards               |                                             ✅                                             |             ✅             |
-| Shorten URLs displayed on link cards           |                                             ✅                                             |             ✅             |
-| Server-side cache for images                   |                                             ✅                                             |             ✅             |
-| Cache images with long URLs                    | ❌ ([implemented](https://github.com/gladevise/remark-link-card/pull/16) but not released) |             ✅             |
-| Build cache for Open Graph metadata and images |                                             ❌                                             | Planned to be implemented |
-| Exclude links in lists from conversion         |                                             ❌                                             |             ✅             |
-| Exclude specific domains from conversion       |                                             ❌                                             |             ✅             |
-| Lazy loading images                            |                                             ❌                                             |             ✅             |
-| Async decoding images                          |                                             ❌                                             |             ✅             |
-| Customize the crawler's user agent string      |                                             ❌                                             |             ✅             |
+| Features                                       |                                     remark-link-card                                      | rehype-og-card |
+| :--------------------------------------------- | :---------------------------------------------------------------------------------------: | :------------: |
+| Plugin type                                    |                                          Remark                                           |     Rehype     |
+| TypeScript support                             |                                             ❌                                             |       ✅        |
+| Convert bare links to link cards               |                                             ✅                                             |       ✅        |
+| Shorten URLs displayed on link cards           |                                             ✅                                             |       ✅        |
+| Server-side cache for images                   |                                             ✅                                             |       ✅        |
+| Cache images with long URLs                    | ❌ ([implemented](https://github.com/gladevise/remark-link-card/pull/16) but not released) |       ✅        |
+| Build cache for Open Graph metadata and images |                                             ❌                                             | ✅ (image only) |
+| Exclude links in lists from conversion         |                                             ❌                                             |       ✅        |
+| Exclude specific domains from conversion       |                                             ❌                                             |       ✅        |
+| Lazy loading images                            |                                             ❌                                             |       ✅        |
+| Async decoding images                          |                                             ❌                                             |       ✅        |
+| Customize the crawler's user agent string      |                                             ❌                                             |       ✅        |
 
 ## Installation
 
@@ -100,6 +100,20 @@ The following links will NOT be converted to link cards:
 ## Options
 
 All options are optional.
+
+### `buildCache`
+
+Whether to cache the OG metadata and images for the next build. `buildCache` option requires `serverCache` option to be enabled.
+
+- Type: `boolean`
+- Default: `false`
+
+### `buildCachePath`
+
+Path to save the build cache. For Astro projects, specify the `./node_modules/.astro` directory.
+
+- Type: `string`
+- Default: `"./.cache/og-card"`
 
 ### `crawlerUserAgent`
 

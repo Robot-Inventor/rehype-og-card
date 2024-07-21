@@ -1,21 +1,22 @@
 import {
     AnchorElement,
-    RehypeOGCardOptions,
     convertTextToAnchorElement,
-    createOGCard,
     downloadImage,
-    getOGData,
     isAnchorElement,
     isTextNode,
     isValidURL
 } from "./util.js";
 import type { Plugin, Transformer } from "unified";
+import { createOGCard, getOGData } from "./openGraphUtil.js";
+import { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
 import path from "path";
 import { visitParents } from "unist-util-visit-parents";
 
 const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
+    buildCache: false,
+    buildCachePath: "./node_modules/.cache",
     crawlerUserAgent:
         // eslint-disable-next-line max-len
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
@@ -42,7 +43,12 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         ...options
     };
 
+    if (mergedOptions.buildCache && !mergedOptions.serverCache) {
+        throw new Error("[rehype-og-card] `buildCache` option requires `serverCache` option to be enabled.");
+    }
+
     mergedOptions.serverCachePath = path.posix.join(mergedOptions.serverCachePath, "./rehype-og-card/");
+    mergedOptions.buildCachePath = path.posix.join(mergedOptions.buildCachePath, "./rehype-og-card/");
 
     /**
      * Transform function to create OG card from bare links.
@@ -95,23 +101,29 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 if (!OGData) return;
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
-                    const filename = await downloadImage(
-                        OGData.OGImageURL,
-                        mergedOptions.serverCachePath,
-                        mergedOptions.crawlerUserAgent
-                    );
-                    if (filename) {
+                    const filename = await downloadImage({
+                        buildCacheDirectory: mergedOptions.buildCachePath,
+                        directly: mergedOptions.serverCachePath,
+                        url: OGData.OGImageURL,
+                        useBuildCache: mergedOptions.buildCache,
+                        userAgent: mergedOptions.crawlerUserAgent
+                    });
+
+                    if (filename && mergedOptions.serverCache) {
                         OGData.OGImageURL = path.posix.join("/rehype-og-card", filename);
                     }
                 }
 
                 if (OGData.faviconURL && mergedOptions.serverCache) {
-                    const filename = await downloadImage(
-                        OGData.faviconURL,
-                        mergedOptions.serverCachePath,
-                        mergedOptions.crawlerUserAgent
-                    );
-                    if (filename) {
+                    const filename = await downloadImage({
+                        buildCacheDirectory: mergedOptions.buildCachePath,
+                        directly: mergedOptions.serverCachePath,
+                        url: OGData.faviconURL,
+                        useBuildCache: mergedOptions.buildCache,
+                        userAgent: mergedOptions.crawlerUserAgent
+                    });
+
+                    if (filename && mergedOptions.serverCache) {
                         OGData.faviconURL = path.posix.join("/rehype-og-card", filename);
                     }
                 }

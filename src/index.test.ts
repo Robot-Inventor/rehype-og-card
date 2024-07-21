@@ -192,3 +192,26 @@ mailto:info@example.com
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 });
+
+it("should work with `buildCache` option", async () => {
+    const serverCachePath = "./.cache/";
+    const buildCachePath = "./.buildCache/";
+
+    await fs.rm(serverCachePath, { recursive: true, force: true });
+    await fs.rm(buildCachePath, { recursive: true, force: true });
+    const processor = processorFactory({ buildCache: true, buildCachePath, serverCachePath });
+
+    const input = `
+https://blog.google/products/android/world-emoji-day-2024/
+    `.trim();
+
+    const expected = `
+<p><div class="og-card-container"><a href="https://blog.google/products/android/world-emoji-day-2024/"><div class="og-card-info"><div class="og-card-title">10 fun facts about emoji for World Emoji Day</div><div class="og-card-description">Celebrate World Emoji Day with Google, and check out what’s new for Emoji Kitchen.</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" width="16"><span class="og-card-url">blog.google</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" decoding="async" loading="lazy" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png"></div></a></div></p>
+    `.trim();
+
+    const result = await processor.process(input);
+    expect(result.toString().trim()).toBe(expected);
+
+    const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
+    expect(cache.length).toBe(2);
+});
