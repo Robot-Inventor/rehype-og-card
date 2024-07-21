@@ -8,6 +8,7 @@ import {
 } from "./util.js";
 import type { Plugin, Transformer } from "unified";
 import { createOGCard, getOGData } from "./openGraphUtil.js";
+import { restoreBuildCache, saveBuildCache } from "./util/cache.js";
 import { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
@@ -56,6 +57,10 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
      */
     // eslint-disable-next-line max-lines-per-function
     const transform: Transformer<Root> = async (tree) => {
+        if (mergedOptions.buildCache) {
+            await restoreBuildCache(mergedOptions.buildCachePath, mergedOptions.serverCachePath);
+        }
+
         const linkCardPromises: Promise<void>[] = [];
 
         // eslint-disable-next-line max-statements, max-lines-per-function
@@ -102,10 +107,8 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
-                        buildCacheDirectory: mergedOptions.buildCachePath,
                         directly: mergedOptions.serverCachePath,
                         url: OGData.OGImageURL,
-                        useBuildCache: mergedOptions.buildCache,
                         userAgent: mergedOptions.crawlerUserAgent
                     });
 
@@ -116,10 +119,8 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 if (OGData.faviconURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
-                        buildCacheDirectory: mergedOptions.buildCachePath,
                         directly: mergedOptions.serverCachePath,
                         url: OGData.faviconURL,
-                        useBuildCache: mergedOptions.buildCache,
                         userAgent: mergedOptions.crawlerUserAgent
                     });
 
@@ -146,6 +147,10 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         });
 
         await Promise.all(linkCardPromises);
+
+        if (mergedOptions.buildCache) {
+            await saveBuildCache(mergedOptions.serverCachePath, mergedOptions.buildCachePath);
+        }
     };
 
     return transform;

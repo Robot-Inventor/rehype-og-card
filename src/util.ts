@@ -82,14 +82,6 @@ interface DownloadImageOptions {
      */
     directly: string;
     /**
-     * Whether to save and restore the image cache.
-     */
-    useBuildCache: boolean;
-    /**
-     * Directory to save the image cache.
-     */
-    buildCacheDirectory: string;
-    /**
      * User agent to use for fetching the image.
      */
     userAgent: string;
@@ -112,18 +104,10 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         const hash = createHash("sha256").update(options.url).digest("hex");
         const filename = hash + path.extname(new URL(options.url).pathname);
         const savePath = path.posix.join(options.directly, filename);
-        const buildCachePath = path.posix.join(options.buildCacheDirectory, filename);
 
         // If the file already exists, return the filename.
         const fileExists = await checkFileExists(savePath);
         if (fileExists) {
-            return filename;
-        }
-
-        const buildCacheExists = await checkFileExists(buildCachePath);
-        if (options.useBuildCache && buildCacheExists) {
-            await fs.mkdir(options.directly, { recursive: true });
-            await fs.copyFile(buildCachePath, savePath);
             return filename;
         }
 
@@ -139,11 +123,6 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         await fs.mkdir(options.directly, { recursive: true });
         await fs.writeFile(savePath, buffer);
 
-        if (options.useBuildCache) {
-            await fs.mkdir(options.buildCacheDirectory, { recursive: true });
-            await fs.writeFile(buildCachePath, buffer);
-        }
-
         return filename;
     } catch (error) {
         // eslint-disable-next-line no-console
@@ -152,4 +131,12 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
     }
 };
 
-export { AnchorElement, isTextNode, isAnchorElement, isValidURL, convertTextToAnchorElement, downloadImage };
+export {
+    AnchorElement,
+    isTextNode,
+    isAnchorElement,
+    isValidURL,
+    convertTextToAnchorElement,
+    checkFileExists,
+    downloadImage
+};
