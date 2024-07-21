@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 0.2.0
+
+### Minor Changes
+
+-   [#11](https://github.com/Robot-Inventor/rehype-og-card/pull/11) [`3b3a2bd`](https://github.com/Robot-Inventor/rehype-og-card/commit/3b3a2bd9ab36a0135db665c0404ed1b858f07a04) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: wrap with `div` elements
+
 ## 0.1.1
 
 ### Patch Changes
