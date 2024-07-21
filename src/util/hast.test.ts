@@ -1,6 +1,7 @@
 import { toHtml } from "hast-util-to-html";
-import { createOGCard, OGCardData } from "./openGraphUtil";
+import { createOGCard } from "./hast.js";
 import { expect, it } from "vitest";
+import { OGCardData } from "../types";
 
 it("should sanitize HTML in OG card", async () => {
     const OGData = {

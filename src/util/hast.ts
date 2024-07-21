@@ -1,58 +1,45 @@
-import type { Element } from "hast";
-import { RehypeOGCardOptions } from "./types.js";
+import type { Element, ElementContent, Text } from "hast";
+import { OGCardData, RehypeOGCardOptions } from "../types.js";
 import { h } from "hastscript";
-import scraper from "open-graph-scraper";
+import { isElement } from "hast-util-is-element";
 
-interface OGCardData {
-    url: string;
-    title: string;
-    description?: string;
-    displayURL: string;
-    faviconURL?: string;
-    OGImageURL?: string;
-    OGImageAlt?: string;
-    OGImageWidth?: number;
-    OGImageHeight?: number;
+interface AnchorElement extends Element {
+    tagName: "a";
+    properties: {
+        href: string;
+    };
 }
 
 /**
- * Get OG card data from given URL.
- * @param url URL to get OG card data.
- * @param userAgent User agent to use for fetching.
- * @returns OG card data.
+ * Check if the node is a text node.
+ * @param node Node to check.
+ * @returns `true` if the node is a text node, `false` otherwise.
  */
-const getOGData = async (url: string, userAgent: string): Promise<OGCardData | null> => {
-    try {
-        const { result } = await scraper({
-            fetchOptions: {
-                headers: {
-                    "user-agent": userAgent
-                }
-            },
-            url
-        });
-        const OGImage = result.ogImage ? result.ogImage[0] : null;
-        const faviconURL = result.favicon
-            ? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`
-            : // eslint-disable-next-line no-undefined
-              undefined;
-        return {
-            OGImageAlt: OGImage?.alt,
-            OGImageHeight: OGImage?.height,
-            OGImageURL: OGImage?.url,
-            OGImageWidth: OGImage?.width,
-            description: result.ogDescription,
-            displayURL: url,
-            faviconURL,
-            title: result.ogTitle || url,
-            url
-        };
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error("[rehype-og-card] Error fetching OG data:", error);
-        return null;
-    }
-};
+const isTextNode = (node: ElementContent): node is Text =>
+    Boolean(node) && typeof node === "object" && "type" in node && node.type === "text";
+
+/**
+ * Check if the node is an anchor element.
+ * @param node Node to check.
+ * @returns `true` if the node is an anchor element, `false` otherwise.
+ */
+const isAnchorElement = (node: unknown): node is AnchorElement =>
+    Boolean(node) && isElement(node, "a") && "href" in node.properties && typeof node.properties.href === "string";
+
+/**
+ * Convert text node to anchor element. **This function does not check if the text is a valid URL.**
+ * @param text Text node to convert.
+ * @returns Anchor element.
+ */
+const convertTextToAnchorElement = (text: Text): AnchorElement =>
+    ({
+        children: [text],
+        properties: {
+            href: text.value.trim()
+        },
+        tagName: "a",
+        type: "element"
+    }) as const satisfies AnchorElement;
 
 /**
  * Create OG card element from given data.
@@ -99,4 +86,4 @@ const createOGCard = (
     return card;
 };
 
-export { OGCardData, createOGCard, getOGData };
+export { AnchorElement, isTextNode, isAnchorElement, convertTextToAnchorElement, createOGCard };
