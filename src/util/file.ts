@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "fs";
 
 /**
  * Check if the file exists.
@@ -7,7 +7,7 @@ import fs from "fs/promises";
  */
 const checkFileExists = async (filePath: string): Promise<boolean> => {
     try {
-        await fs.access(filePath);
+        await fs.promises.access(filePath);
         return true;
     } catch {
         return false;
@@ -15,20 +15,51 @@ const checkFileExists = async (filePath: string): Promise<boolean> => {
 };
 
 /**
+ * Check if the file exists.
+ * @param filePath Path to check.
+ * @returns `true` if the file exists, `false` otherwise.
+ */
+const checkFileExistsSync = (filePath: string): boolean => {
+    let result = false;
+    fs.access(filePath, (error) => {
+        result = !error;
+    });
+    return result;
+};
+
+/**
+ * Create directory.
+ * @param dir Directory path.
+ */
+const createDirectorySync = (dir: string): void => {
+    fs.mkdir(dir, { recursive: true }, (error) => {
+        if (error) {
+            // eslint-disable-next-line no-console
+            console.error("[rehype-og-card] Failed to copy files: ", error);
+        }
+    });
+};
+
+/**
  * Copy directory from source to destination.
  * @param source Source directory.
  * @param destination Destination directory.
  */
-const copyDirectory = async (source: string, destination: string): Promise<void> => {
-    const sourceExists = await checkFileExists(source);
+const copyDirectory = (source: string, destination: string): void => {
+    const sourceExists = checkFileExistsSync(source);
     if (!sourceExists) return;
 
-    const destinationExists = await checkFileExists(destination);
+    const destinationExists = checkFileExistsSync(destination);
     if (!destinationExists) {
-        await fs.mkdir(destination, { recursive: true });
+        createDirectorySync(destination);
     }
 
-    await fs.cp(source, destination, { recursive: true });
+    fs.cp(source, destination, { recursive: true }, (error) => {
+        if (error) {
+            // eslint-disable-next-line no-console
+            console.error("[rehype-og-card] Failed to copy files: ", error);
+        }
+    });
 };
 
-export { checkFileExists, copyDirectory };
+export { checkFileExists, checkFileExistsSync, createDirectorySync, copyDirectory };
