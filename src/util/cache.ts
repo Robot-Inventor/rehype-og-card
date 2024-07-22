@@ -1,12 +1,17 @@
-import { copyDirectory } from "./file.js";
+import { checkFileExists, copyDirectory } from "./file.js";
+import fs from "fs/promises";
 
 /**
  * Save build cache if server cache exists.
  * @param serverCachePath Server cache path.
  * @param buildCachePath Build cache path.
  */
-const saveBuildCache = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
-    await copyDirectory(serverCachePath, buildCachePath);
+const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
+    const serverCacheExists = await checkFileExists(serverCachePath);
+    const buildCacheExists = await checkFileExists(buildCachePath);
+    if (serverCacheExists && !buildCacheExists) {
+        await fs.copyFile(serverCachePath, buildCachePath);
+    }
 };
 
 /**
@@ -14,8 +19,8 @@ const saveBuildCache = async (serverCachePath: string, buildCachePath: string): 
  * @param buildCachePath Build cache path.
  * @param serverCachePath Server cache path.
  */
-const restoreBuildCache = async (buildCachePath: string, serverCachePath: string): Promise<void> => {
-    await copyDirectory(buildCachePath, serverCachePath);
+const restoreBuildCache = (buildCachePath: string, serverCachePath: string): void => {
+    copyDirectory(buildCachePath, serverCachePath);
 };
 
-export { saveBuildCache, restoreBuildCache };
+export { saveBuildCacheFile, restoreBuildCache };

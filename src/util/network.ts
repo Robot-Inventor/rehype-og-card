@@ -68,7 +68,7 @@ interface DownloadImageOptions {
     /**
      * Directory to save the downloaded image.
      */
-    directly: string;
+    directory: string;
     /**
      * User agent to use for fetching the image.
      */
@@ -78,7 +78,7 @@ interface DownloadImageOptions {
 /**
  * Download image from given URL.
  * @param options Options to download image.
- * @returns Path to the downloaded image.
+ * @returns Filename of the downloaded image.
  */
 // eslint-disable-next-line max-statements
 const downloadImage = async (options: DownloadImageOptions): Promise<string | null> => {
@@ -91,13 +91,12 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
     try {
         const hash = createHash("sha256").update(options.url).digest("hex");
         const filename = hash + path.extname(new URL(options.url).pathname);
-        const savePath = path.posix.join(options.directly, filename);
+
+        const savePath = path.join(options.directory, filename);
 
         // If the file already exists, return the filename.
         const fileExists = await checkFileExists(savePath);
-        if (fileExists) {
-            return filename;
-        }
+        if (fileExists) return filename;
 
         const response = await fetch(options.url, {
             headers: {
@@ -108,7 +107,10 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        await fs.mkdir(options.directly, { recursive: true });
+        const saveDirectoryExists = await checkFileExists(options.directory);
+        if (!saveDirectoryExists) {
+            await fs.mkdir(options.directory, { recursive: true });
+        }
         await fs.writeFile(savePath, buffer);
 
         return filename;
