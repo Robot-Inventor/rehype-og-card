@@ -8,8 +8,12 @@ import path from "path";
  * @param serverCachePath Server cache path.
  * @param buildCachePath Build cache path.
  */
-const saveBuildCache = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
-    await copyDirectory(serverCachePath, buildCachePath);
+const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
+    const serverCacheExists = await checkFileExists(serverCachePath);
+    const buildCacheExists = await checkFileExists(buildCachePath);
+    if (serverCacheExists && !buildCacheExists) {
+        await fs.copyFile(serverCachePath, buildCachePath);
+    }
 };
 
 /**
@@ -17,8 +21,8 @@ const saveBuildCache = async (serverCachePath: string, buildCachePath: string): 
  * @param buildCachePath Build cache path.
  * @param serverCachePath Server cache path.
  */
-const restoreBuildCache = async (buildCachePath: string, serverCachePath: string): Promise<void> => {
-    await copyDirectory(buildCachePath, serverCachePath);
+const restoreBuildCache = (buildCachePath: string, serverCachePath: string): void => {
+    copyDirectory(buildCachePath, serverCachePath);
 };
 
 /**
@@ -55,4 +59,4 @@ const restoreOGDataBuildCache = async (url: string, buildCachePath: string): Pro
     }
 };
 
-export { saveBuildCache, restoreBuildCache, saveOGDataBuildCache, restoreOGDataBuildCache };
+export { saveBuildCacheFile, restoreBuildCache, saveOGDataBuildCache, restoreOGDataBuildCache };

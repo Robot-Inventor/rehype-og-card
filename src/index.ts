@@ -1,7 +1,8 @@
 import { AnchorElement, convertTextToAnchorElement, createOGCard, isAnchorElement, isTextNode } from "./util/hast.js";
 import type { Plugin, Transformer } from "unified";
+import { checkFileExistsSync, createDirectorySync } from "./util/file.js";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
-import { restoreBuildCache, restoreOGDataBuildCache, saveBuildCache, saveOGDataBuildCache } from "./util/cache.js";
+import { restoreBuildCache, restoreOGDataBuildCache, saveBuildCacheFile, saveOGDataBuildCache } from "./util/cache.js";
 import { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
@@ -28,7 +29,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
  * @param options Plugin options.
  * @returns Transformer function.
  */
-// eslint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function, max-statements
 const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     options?: RehypeOGCardOptions
 ): Transformer<Root> => {
@@ -44,16 +45,21 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     mergedOptions.serverCachePath = path.posix.join(mergedOptions.serverCachePath, "./rehype-og-card/");
     mergedOptions.buildCachePath = path.posix.join(mergedOptions.buildCachePath, "./rehype-og-card/");
 
+    const buildCacheExists = checkFileExistsSync(mergedOptions.buildCachePath);
+    if (mergedOptions.buildCache) {
+        if (buildCacheExists) {
+            restoreBuildCache(mergedOptions.buildCachePath, mergedOptions.serverCachePath);
+        } else {
+            createDirectorySync(mergedOptions.buildCachePath);
+        }
+    }
+
     /**
      * Transform function to create OG card from bare links.
      * @param tree Root node of the HAST tree.
      */
     // eslint-disable-next-line max-lines-per-function
     const transform: Transformer<Root> = async (tree) => {
-        if (mergedOptions.buildCache) {
-            await restoreBuildCache(mergedOptions.buildCachePath, mergedOptions.serverCachePath);
-        }
-
         const linkCardPromises: Promise<void>[] = [];
 
         // eslint-disable-next-line max-statements, max-lines-per-function
@@ -109,7 +115,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
-                        directly: mergedOptions.serverCachePath,
+                        directory: mergedOptions.serverCachePath,
                         url: OGData.OGImageURL,
                         userAgent: mergedOptions.crawlerUserAgent
                     });
@@ -117,17 +123,29 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                     if (filename && mergedOptions.serverCache) {
                         OGData.OGImageURL = path.posix.join("/rehype-og-card", filename);
                     }
+
+                    if (filename && mergedOptions.buildCache) {
+                        const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
+                        const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
+                        await saveBuildCacheFile(downloadedFilePath, buildCachePath);
+                    }
                 }
 
                 if (OGData.faviconURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
-                        directly: mergedOptions.serverCachePath,
+                        directory: mergedOptions.serverCachePath,
                         url: OGData.faviconURL,
                         userAgent: mergedOptions.crawlerUserAgent
                     });
 
                     if (filename && mergedOptions.serverCache) {
                         OGData.faviconURL = path.posix.join("/rehype-og-card", filename);
+                    }
+
+                    if (filename && mergedOptions.buildCache) {
+                        const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
+                        const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
+                        await saveBuildCacheFile(downloadedFilePath, buildCachePath);
                     }
                 }
 
@@ -149,10 +167,6 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         });
 
         await Promise.all(linkCardPromises);
-
-        if (mergedOptions.buildCache) {
-            await saveBuildCache(mergedOptions.serverCachePath, mergedOptions.buildCachePath);
-        }
     };
 
     return transform;
