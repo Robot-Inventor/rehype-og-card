@@ -109,7 +109,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                     OGData = await getOGData(anchorNode.properties.href, mergedOptions.crawlerUserAgent);
                     if (!OGData) return;
                     if (mergedOptions.buildCache) {
-                        await saveOGDataBuildCache(anchorNode.properties.href, OGData, mergedOptions.buildCachePath);
+                        void saveOGDataBuildCache(anchorNode.properties.href, OGData, mergedOptions.buildCachePath);
                     }
                 }
 
@@ -127,7 +127,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                     if (filename && mergedOptions.buildCache) {
                         const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
                         const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
-                        await saveBuildCacheFile(downloadedFilePath, buildCachePath);
+                        void saveBuildCacheFile(downloadedFilePath, buildCachePath);
                     }
                 }
 
@@ -145,7 +145,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                     if (filename && mergedOptions.buildCache) {
                         const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
                         const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
-                        await saveBuildCacheFile(downloadedFilePath, buildCachePath);
+                        void saveBuildCacheFile(downloadedFilePath, buildCachePath);
                     }
                 }
 

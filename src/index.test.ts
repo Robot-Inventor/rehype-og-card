@@ -6,6 +6,7 @@ import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
 import fs from "fs/promises";
 import path from "path";
+import { setTimeout } from "timers/promises";
 
 const processorFactory = (options?: RehypeOGCardOptions) => {
     return unified().use(remarkParse).use(remarkRehype).use(rehypeOGCard, options).use(rehypeStringify);
@@ -211,6 +212,9 @@ https://blog.google/products/android/world-emoji-day-2024/
 
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
+
+    // Wait for cache to be saved.
+    await setTimeout(1000);
 
     const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
     expect(cache.length).toBe(3);
