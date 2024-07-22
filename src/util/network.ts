@@ -1,5 +1,6 @@
 import { checkFileExists, generateFilename } from "./file.js";
 import type { OGCardData } from "../types.js";
+import fetch from "node-fetch";
 import fs from "fs/promises";
 import path from "path";
 import scraper from "open-graph-scraper";
@@ -98,7 +99,9 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         const response = await fetch(options.url, {
             headers: {
                 "user-agent": options.userAgent
-            }
+            },
+            // eslint-disable-next-line no-magic-numbers
+            signal: AbortSignal.timeout(10 * 1000)
         });
 
         const arrayBuffer = await response.arrayBuffer();
