@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 0.3.3
+
+### Patch Changes
+
+-   [#28](https://github.com/Robot-Inventor/rehype-og-card/pull/28) [`83096ab`](https://github.com/Robot-Inventor/rehype-og-card/commit/83096ab5b566eb5695c539aef4cc2bf07245d89a) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - refactor: improve directory copy operation
+
 ## 0.3.2
 
 ### Patch Changes
