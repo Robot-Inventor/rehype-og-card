@@ -2,7 +2,7 @@ import { AnchorElement, convertTextToAnchorElement, createOGCard, isAnchorElemen
 import type { Plugin, Transformer } from "unified";
 import { checkFileExistsSync, createDirectorySync } from "./util/file.js";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
-import { restoreBuildCache, saveBuildCacheFile } from "./util/cache.js";
+import { restoreBuildCache, restoreOGDataBuildCache, saveBuildCacheFile, saveOGDataBuildCache } from "./util/cache.js";
 import { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
@@ -101,8 +101,17 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
             // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function
             const linkCardPromise = async (): Promise<void> => {
-                const OGData = await getOGData(anchorNode.properties.href, mergedOptions.crawlerUserAgent);
-                if (!OGData) return;
+                let OGData = mergedOptions.buildCache
+                    ? await restoreOGDataBuildCache(anchorNode.properties.href, mergedOptions.buildCachePath)
+                    : null;
+
+                if (!OGData) {
+                    OGData = await getOGData(anchorNode.properties.href, mergedOptions.crawlerUserAgent);
+                    if (!OGData) return;
+                    if (mergedOptions.buildCache) {
+                        await saveOGDataBuildCache(anchorNode.properties.href, OGData, mergedOptions.buildCachePath);
+                    }
+                }
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
