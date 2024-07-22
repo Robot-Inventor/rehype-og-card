@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 0.4.1
+
+### Patch Changes
+
+-   [#34](https://github.com/Robot-Inventor/rehype-og-card/pull/34) [`4263571`](https://github.com/Robot-Inventor/rehype-og-card/commit/4263571ce11b34895ae47e7850c0b44bf05ce980) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: use node-fetch to prevent `Timeout.internalConnectMultipleTimeout` error
+
+-   [#36](https://github.com/Robot-Inventor/rehype-og-card/pull/36) [`065a362`](https://github.com/Robot-Inventor/rehype-og-card/commit/065a3620ec32e9485171f5a31e9fc0f4af84fe53) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: delete unnecessary `await` to improve performance
+
 ## 0.4.0
 
 ### Minor Changes
