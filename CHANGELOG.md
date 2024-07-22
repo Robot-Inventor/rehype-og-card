@@ -1,5 +1,15 @@
 # rehype-og-card
 
+## 0.4.0
+
+### Minor Changes
+
+-   [#32](https://github.com/Robot-Inventor/rehype-og-card/pull/32) [`9c22ed0`](https://github.com/Robot-Inventor/rehype-og-card/commit/9c22ed0bfabacb5f3861f795bfd1986c4d2a70d8) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add build cache for OG metadata
+
+### Patch Changes
+
+-   [#30](https://github.com/Robot-Inventor/rehype-og-card/pull/30) [`2fb9e8b`](https://github.com/Robot-Inventor/rehype-og-card/commit/2fb9e8b6f20015b25a92605227e5943f932b06f6) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: improve build cache process
+
 ## 0.3.3
 
 ### Patch Changes
