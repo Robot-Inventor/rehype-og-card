@@ -1,6 +1,5 @@
+import { checkFileExists, generateFilename } from "./file.js";
 import type { OGCardData } from "../types.js";
-import { checkFileExists } from "./file.js";
-import { createHash } from "crypto";
 import fs from "fs/promises";
 import path from "path";
 import scraper from "open-graph-scraper";
@@ -76,7 +75,7 @@ interface DownloadImageOptions {
 }
 
 /**
- * Download image from given URL.
+ * Download image from given URL. If the image already exists, return the filename.
  * @param options Options to download image.
  * @returns Path to the downloaded image.
  */
@@ -89,8 +88,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
     }
 
     try {
-        const hash = createHash("sha256").update(options.url).digest("hex");
-        const filename = hash + path.extname(new URL(options.url).pathname);
+        const filename = generateFilename(options.url);
         const savePath = path.posix.join(options.directly, filename);
 
         // If the file already exists, return the filename.

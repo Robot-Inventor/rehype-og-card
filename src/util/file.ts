@@ -1,4 +1,6 @@
+import { createHash } from "crypto";
 import fs from "fs/promises";
+import path from "path";
 
 /**
  * Check if the file exists.
@@ -31,4 +33,16 @@ const copyDirectory = async (source: string, destination: string): Promise<void>
     await fs.cp(source, destination, { recursive: true });
 };
 
-export { checkFileExists, copyDirectory };
+/**
+ * Generate filename from URL.
+ * @param url URL to generate filename.
+ * @param extension Include extension in the filename.
+ * @returns Generated filename.
+ */
+const generateFilename = (url: string, extension: boolean = true): string => {
+    const hash = createHash("sha256").update(url).digest("hex");
+    const filename = extension ? hash + path.extname(new URL(url).pathname) : hash;
+    return filename;
+};
+
+export { checkFileExists, copyDirectory, generateFilename };

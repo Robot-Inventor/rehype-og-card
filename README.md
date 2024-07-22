@@ -10,7 +10,7 @@ Rehype plugin to convert text links to link cards inspired by [remark-link-card]
 | Shorten URLs displayed on link cards           |                                             ✅                                             |       ✅        |
 | Server-side cache for images                   |                                             ✅                                             |       ✅        |
 | Cache images with long URLs                    | ❌ ([implemented](https://github.com/gladevise/remark-link-card/pull/16) but not released) |       ✅        |
-| Build cache for Open Graph metadata and images |                                             ❌                                             | ✅ (image only) |
+| Build cache for Open Graph metadata and images |                                             ❌                                             |       ✅        |
 | Exclude links in lists from conversion         |                                             ❌                                             |       ✅        |
 | Exclude specific domains from conversion       |                                             ❌                                             |       ✅        |
 | Lazy loading images                            |                                             ❌                                             |       ✅        |
