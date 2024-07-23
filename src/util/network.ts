@@ -13,9 +13,13 @@ import scraper from "open-graph-scraper";
 const isValidURL = (url: string): boolean => {
     const ALLOWED_PROTOCOLS = ["http:", "https:"];
 
+    const lowerCaseURL = url.toLowerCase();
+    const isLikelyURL = ALLOWED_PROTOCOLS.some((protocol) => lowerCaseURL.startsWith(protocol));
+    if (!isLikelyURL) return false;
+
     try {
-        const { protocol } = new URL(url);
-        return ALLOWED_PROTOCOLS.includes(protocol.toLowerCase());
+        new URL(url);
+        return true;
     } catch {
         return false;
     }
