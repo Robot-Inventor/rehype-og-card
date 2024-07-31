@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.0
+
+### Major Changes
+
+-   [#49](https://github.com/Robot-Inventor/rehype-og-card/pull/49) [`0f9ccbe`](https://github.com/Robot-Inventor/rehype-og-card/commit/0f9ccbe13ddca30ab05887a93af759e66a7ff0a0) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add `openInNewTab` option
+
 ## 0.4.3
 
 ### Patch Changes
