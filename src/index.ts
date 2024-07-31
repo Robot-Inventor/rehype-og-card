@@ -19,6 +19,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     enableSameTextURLConversion: false,
     excludeDomains: [] as const,
     loading: "lazy",
+    openInNewTab: false,
     serverCache: true,
     serverCachePath: "./public",
     shortenURL: true

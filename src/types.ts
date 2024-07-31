@@ -19,6 +19,11 @@ interface RehypeOGCardOptions {
      */
     shortenURL?: boolean;
     /**
+     * Whether to open the link in a new tab.
+     * @default false
+     */
+    openInNewTab?: boolean;
+    /**
      * Whether to enable converting the links
      * that have the same URL and text (e.g., `[https://example.com](https://example.com)`).
      * @default false

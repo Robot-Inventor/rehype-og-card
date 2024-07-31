@@ -49,10 +49,20 @@ const convertTextToAnchorElement = (text: Text): AnchorElement =>
  */
 const createOGCard = (
     data: OGCardData,
-    options: Required<{ loading: RehypeOGCardOptions["loading"]; decoding: RehypeOGCardOptions["decoding"] }>
+    options: Required<{
+        loading: RehypeOGCardOptions["loading"];
+        decoding: RehypeOGCardOptions["decoding"];
+        openInNewTab: RehypeOGCardOptions["openInNewTab"];
+    }>
 ): Element => {
+    const openInNewTab = {
+        rel: "noopener noreferrer",
+        target: "_blank"
+    };
+
     const card = h("div.og-card-container", [
-        h("a", { href: data.url }, [
+        // eslint-disable-next-line no-extra-parens
+        h("a", { href: data.url, ...(options.openInNewTab ? openInNewTab : {}) }, [
             h("div.og-card-info", [
                 h("div.og-card-title", data.title),
                 data.description ? h("div.og-card-description", data.description) : null,

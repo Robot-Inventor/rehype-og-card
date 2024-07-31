@@ -150,6 +150,13 @@ Domains to exclude from conversion.
 - Type: `"eager" | "lazy"`
 - Default: `"lazy"`
 
+### `openInNewTab`
+
+Whether to open the link in a new tab.
+
+- Type: `boolean`
+- Default: `false`
+
 ### `serverCache`
 
 Whether to cache the OG data on the server.
