@@ -1,5 +1,5 @@
 import { checkFileExists, copyDirectory, generateFilename } from "./file.js";
-import { OGCardData } from "../types.js";
+import type { OGCardData } from "../types.js";
 import fs from "fs/promises";
 import path from "path";
 
