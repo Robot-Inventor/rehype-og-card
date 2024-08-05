@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.2
+
+### Patch Changes
+
+-   [#57](https://github.com/Robot-Inventor/rehype-og-card/pull/57) [`1896c98`](https://github.com/Robot-Inventor/rehype-og-card/commit/1896c98277c62445391bf445e74c55f80467b8af) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency @robot-inventor/eslint-config to v2
+
 ## 1.0.1
 
 ### Patch Changes
