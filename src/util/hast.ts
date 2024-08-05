@@ -1,5 +1,5 @@
 import type { Element, ElementContent, Text } from "hast";
-import { OGCardData, RehypeOGCardOptions } from "../types.js";
+import type { OGCardData, RehypeOGCardOptions } from "../types.js";
 import { h } from "hastscript";
 import { isElement } from "hast-util-is-element";
 

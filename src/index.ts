@@ -1,4 +1,10 @@
-import { AnchorElement, convertTextToAnchorElement, createOGCard, isAnchorElement, isTextNode } from "./util/hast.js";
+import {
+    type AnchorElement,
+    convertTextToAnchorElement,
+    createOGCard,
+    isAnchorElement,
+    isTextNode
+} from "./util/hast.js";
 import type { Plugin, Transformer } from "unified";
 import { checkFileExistsSync, createDirectorySync } from "./util/file.js";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
@@ -98,7 +104,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             if (!isTheOnlyChild) return;
 
             const targetURL = new URL(anchorNode.properties.href);
-            if (mergedOptions.excludeDomains?.includes(targetURL.hostname)) return;
+            if (mergedOptions.excludeDomains.includes(targetURL.hostname)) return;
 
             // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function
             const linkCardPromise = async (): Promise<void> => {
@@ -121,7 +127,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                         userAgent: mergedOptions.crawlerUserAgent
                     });
 
-                    if (filename && mergedOptions.serverCache) {
+                    if (filename) {
                         OGData.OGImageURL = path.posix.join("/rehype-og-card", filename);
                     }
 
@@ -139,7 +145,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                         userAgent: mergedOptions.crawlerUserAgent
                     });
 
-                    if (filename && mergedOptions.serverCache) {
+                    if (filename) {
                         OGData.faviconURL = path.posix.join("/rehype-og-card", filename);
                     }
 
