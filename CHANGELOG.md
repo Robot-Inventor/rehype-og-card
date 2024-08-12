@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.3
+
+### Patch Changes
+
+-   [#67](https://github.com/Robot-Inventor/rehype-og-card/pull/67) [`0ec3969`](https://github.com/Robot-Inventor/rehype-og-card/commit/0ec3969b230d6655a7aae3afa55ba346ab33e8ec) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: fix some ESLint errors
+
 ## 1.0.2
 
 ### Patch Changes
