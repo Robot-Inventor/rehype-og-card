@@ -54,6 +54,7 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             description: result.ogDescription,
             displayURL: url,
             faviconURL,
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             title: result.ogTitle || url,
             url
         };

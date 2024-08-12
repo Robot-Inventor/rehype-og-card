@@ -9,7 +9,7 @@ import type { Plugin, Transformer } from "unified";
 import { checkFileExistsSync, createDirectorySync } from "./util/file.js";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
 import { restoreBuildCache, restoreOGDataBuildCache, saveBuildCacheFile, saveOGDataBuildCache } from "./util/cache.js";
-import { RehypeOGCardOptions } from "./types.js";
+import type { RehypeOGCardOptions } from "./types.js";
 import type { Root } from "hast";
 import { isElement } from "hast-util-is-element";
 import path from "path";
@@ -67,7 +67,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
      */
     // eslint-disable-next-line max-lines-per-function
     const transform: Transformer<Root> = async (tree) => {
-        const linkCardPromises: Promise<void>[] = [];
+        const linkCardPromises: Array<Promise<void>> = [];
 
         // eslint-disable-next-line max-statements, max-lines-per-function
         visitParents<Root, string[]>(tree, ["element", "text"], (node, ancestors): void => {
@@ -180,4 +180,4 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 };
 
 export default rehypeOGCard;
-export { RehypeOGCardOptions };
+export type { RehypeOGCardOptions };
