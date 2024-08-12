@@ -70,7 +70,7 @@ const copyDirectory = (source: string, destination: string): void => {
  * @param extension Include extension in the filename.
  * @returns Generated filename.
  */
-const generateFilename = (url: string, extension: boolean = true): string => {
+const generateFilename = (url: string, extension = true): string => {
     const hash = createHash("sha256").update(url).digest("hex");
     const filename = extension ? hash + path.extname(new URL(url).pathname) : hash;
     return filename;

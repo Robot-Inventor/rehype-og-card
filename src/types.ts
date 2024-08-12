@@ -74,4 +74,4 @@ interface OGCardData {
     OGImageHeight?: number;
 }
 
-export { RehypeOGCardOptions, OGCardData };
+export type { RehypeOGCardOptions, OGCardData };
