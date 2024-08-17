@@ -19,7 +19,6 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     buildCache: false,
     buildCachePath: "./node_modules/.cache",
     crawlerUserAgent:
-        // eslint-disable-next-line max-len
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
     decoding: "async",
     enableSameTextURLConversion: false,

@@ -53,13 +53,11 @@ interface RehypeOGCardOptions {
      * @default "./node_modules/.cache"
      */
     buildCachePath?: string;
-    /* eslint-disable max-len */
     /**
      * User agent to use for fetching the OG metadata and images.
      * @default "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
      */
     crawlerUserAgent?: string;
-    /* eslint-enable max-len */
 }
 
 interface OGCardData {
