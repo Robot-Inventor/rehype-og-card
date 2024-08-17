@@ -61,7 +61,6 @@ const createOGCard = (
     };
 
     const card = h("div.og-card-container", [
-        // eslint-disable-next-line no-extra-parens
         h("a", { href: data.url, ...(options.openInNewTab ? openInNewTab : {}) }, [
             h("div.og-card-info", [
                 h("div.og-card-title", data.title),
