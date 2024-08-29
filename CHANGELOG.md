@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.6
+
+### Patch Changes
+
+-   [#85](https://github.com/Robot-Inventor/rehype-og-card/pull/85) [`0cfacb8`](https://github.com/Robot-Inventor/rehype-og-card/commit/0cfacb8a9d86ab3293df787a59eb4ba3caf853bb) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency open-graph-scraper to v6.8.1
+
 ## 1.0.5
 
 ### Patch Changes
