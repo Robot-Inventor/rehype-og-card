@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.9
+
+### Patch Changes
+
+-   [#108](https://github.com/Robot-Inventor/rehype-og-card/pull/108) [`b32c987`](https://github.com/Robot-Inventor/rehype-og-card/commit/b32c98788d7d42b2c4a40e80ebcaf970f6f4b24b) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency rehype-stringify to v10.0.1
+
 ## 1.0.8
 
 ### Patch Changes
