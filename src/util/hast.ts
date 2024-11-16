@@ -24,7 +24,7 @@ const isTextNode = (node: ElementContent): node is Text =>
  * @returns `true` if the node is an anchor element, `false` otherwise.
  */
 const isAnchorElement = (node: unknown): node is AnchorElement =>
-    Boolean(node) && isElement(node, "a") && "href" in node.properties && typeof node.properties.href === "string";
+    Boolean(node) && isElement(node, "a") && "href" in node.properties && typeof node.properties["href"] === "string";
 
 /**
  * Convert text node to anchor element. **This function does not check if the text is a valid URL.**
