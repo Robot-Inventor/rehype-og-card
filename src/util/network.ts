@@ -2,6 +2,7 @@ import { checkFileExists, generateFilename } from "./file.js";
 import type { OGCardData } from "../types.js";
 import fetch from "node-fetch";
 import fs from "fs/promises";
+import { isValidUrl } from "@robot-inventor/ts-utils";
 import path from "path";
 import scraper from "open-graph-scraper";
 
@@ -13,16 +14,7 @@ import scraper from "open-graph-scraper";
 const isValidURL = (url: string): boolean => {
     const ALLOWED_PROTOCOLS = ["http:", "https:"];
 
-    const lowerCaseURL = url.toLowerCase();
-    const isLikelyURL = ALLOWED_PROTOCOLS.some((protocol) => lowerCaseURL.startsWith(protocol));
-    if (!isLikelyURL) return false;
-
-    try {
-        new URL(url);
-        return true;
-    } catch {
-        return false;
-    }
+    return Boolean(isValidUrl(url, ALLOWED_PROTOCOLS));
 };
 
 /**
