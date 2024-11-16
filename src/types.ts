@@ -63,13 +63,13 @@ interface RehypeOGCardOptions {
 interface OGCardData {
     url: string;
     title: string;
-    description?: string;
+    description?: string | undefined;
     displayURL: string;
-    faviconURL?: string;
-    OGImageURL?: string;
-    OGImageAlt?: string;
-    OGImageWidth?: number;
-    OGImageHeight?: number;
+    faviconURL?: string | undefined;
+    OGImageURL?: string | undefined;
+    OGImageAlt?: string | undefined;
+    OGImageWidth?: number | undefined;
+    OGImageHeight?: number | undefined;
 }
 
 export type { RehypeOGCardOptions, OGCardData };

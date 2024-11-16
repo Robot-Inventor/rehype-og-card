@@ -81,6 +81,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 const isSameTextURL =
                     // eslint-disable-next-line no-magic-numbers
                     node.children.length === 1 &&
+                    node.children[0] &&
                     isTextNode(node.children[0]) &&
                     node.children[0].value === node.properties.href;
 
@@ -90,8 +91,12 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             } else {
                 return;
             }
+
             // eslint-disable-next-line no-magic-numbers
-            if (!isElement(ancestors[ancestors.length - 1], "p")) return;
+            const parent = ancestors[ancestors.length - 1];
+            if (!parent) return;
+
+            if (!isElement(parent, "p")) return;
 
             const shouldSkip = ancestors.some(
                 (ancestor) => isElement(ancestor) && ["ul", "ol"].includes(ancestor.tagName)
@@ -99,7 +104,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             if (shouldSkip) return;
 
             // eslint-disable-next-line no-magic-numbers
-            const isTheOnlyChild = ancestors[ancestors.length - 1].children.length === 1;
+            const isTheOnlyChild = parent.children.length === 1;
             if (!isTheOnlyChild) return;
 
             const targetURL = new URL(anchorNode.properties.href);
@@ -162,12 +167,11 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 const OGCard = createOGCard(OGData, mergedOptions);
 
-                // eslint-disable-next-line no-magic-numbers
-                const index = ancestors[ancestors.length - 1].children.indexOf(node);
+                const index = parent.children.indexOf(node);
                 // eslint-disable-next-line no-magic-numbers
                 if (index === -1) return;
                 // eslint-disable-next-line no-magic-numbers
-                ancestors[ancestors.length - 1].children.splice(index, 1, OGCard);
+                parent.children.splice(index, 1, OGCard);
             };
             linkCardPromises.push(linkCardPromise());
         });
