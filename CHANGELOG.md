@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.11
+
+### Patch Changes
+
+-   [#146](https://github.com/Robot-Inventor/rehype-og-card/pull/146) [`a9b6394`](https://github.com/Robot-Inventor/rehype-og-card/commit/a9b63941753590e526df7a17ca72e945df81d613) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: improve type safety
+
 ## 1.0.10
 
 ### Patch Changes
