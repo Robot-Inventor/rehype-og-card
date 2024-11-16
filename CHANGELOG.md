@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 1.0.10
+
+### Patch Changes
+
+-   [#141](https://github.com/Robot-Inventor/rehype-og-card/pull/141) [`aa1c53a`](https://github.com/Robot-Inventor/rehype-og-card/commit/aa1c53aca65500c7b67d4ee0a71aa3085f4c32b2) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: update vulnerable dependencies
+
+-   [#143](https://github.com/Robot-Inventor/rehype-og-card/pull/143) [`05a1d29`](https://github.com/Robot-Inventor/rehype-og-card/commit/05a1d299437713e99bfe227b0298615dad015bbd) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: use `@robot-inventor/ts-utils`
+
 ## 1.0.9
 
 ### Patch Changes
