@@ -72,7 +72,12 @@ const copyDirectory = (source: string, destination: string): void => {
  */
 const generateFilename = (url: string, extension = true): string => {
     const hash = createHash("sha256").update(url).digest("hex");
-    const filename = extension ? hash + path.extname(new URL(url).pathname) : hash;
+    const possibleExtension = path.extname(new URL(url).pathname).toLowerCase();
+    const allowedExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".svg"] as const;
+    const extensionString = allowedExtensions.includes(possibleExtension as (typeof allowedExtensions)[number])
+        ? possibleExtension
+        : "";
+    const filename = extension ? hash + extensionString : hash;
     return filename;
 };
 
