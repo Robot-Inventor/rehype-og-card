@@ -1,5 +1,15 @@
 # rehype-og-card
 
+## 1.0.13
+
+### Patch Changes
+
+- [#168](https://github.com/Robot-Inventor/rehype-og-card/pull/168) [`ad94686`](https://github.com/Robot-Inventor/rehype-og-card/commit/ad94686dccd499f112c8b25923c03df79f49dff5) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: handle incorrect file extension recognition for image downloads causing long filenames and errors
+
+- [#169](https://github.com/Robot-Inventor/rehype-og-card/pull/169) [`bfc40de`](https://github.com/Robot-Inventor/rehype-og-card/commit/bfc40dea9a7d996b735fb4eae086973587882c3b) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update vulnerable dependencies
+
+- [#167](https://github.com/Robot-Inventor/rehype-og-card/pull/167) [`284336c`](https://github.com/Robot-Inventor/rehype-og-card/commit/284336c20e6908cd71a08e1994f71e6974658572) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency hast-util-to-html to v9.0.4
+
 ## 1.0.12
 
 ### Patch Changes
