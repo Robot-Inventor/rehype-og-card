@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.14
+
+### Patch Changes
+
+- [#174](https://github.com/Robot-Inventor/rehype-og-card/pull/174) [`997d14b`](https://github.com/Robot-Inventor/rehype-og-card/commit/997d14bfae8eb097ec91a306ed9cf7e5cd4c6f03) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency @robot-inventor/ts-utils to v0.6.2
+
 ## 1.0.13
 
 ### Patch Changes
