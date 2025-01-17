@@ -53,7 +53,7 @@
     "remark-rehype": "^11.1.0",
     "typescript": "^5.5.3",
     "unified": "^11.0.5",
-    "vitest": "^2.0.3"
+    "vitest": "^3.0.0"
   },
   "dependencies": {
     "@robot-inventor/ts-utils": "^0.6.0",
