@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.18
+
+### Patch Changes
+
+- [#219](https://github.com/Robot-Inventor/rehype-og-card/pull/219) [`78ab7be`](https://github.com/Robot-Inventor/rehype-og-card/commit/78ab7be44a7c4f4cd9a62c7d4be4feb4123ba7d5) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - refactor: reduce dependency
+
 ## 1.0.17
 
 ### Patch Changes
