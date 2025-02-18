@@ -2,7 +2,6 @@ import { checkFileExists, generateFilename } from "./file.js";
 import type { OGCardData } from "../types.js";
 import fetch from "node-fetch";
 import fs from "fs/promises";
-import { isValidUrl } from "@robot-inventor/ts-utils";
 import path from "path";
 import scraper from "open-graph-scraper";
 
@@ -13,8 +12,9 @@ import scraper from "open-graph-scraper";
  */
 const isValidURL = (url: string): boolean => {
     const ALLOWED_PROTOCOLS = ["http:", "https:"];
+    const parsedUrl = URL.parse(url);
 
-    return Boolean(isValidUrl(url, ALLOWED_PROTOCOLS));
+    return Boolean(parsedUrl && ALLOWED_PROTOCOLS.includes(parsedUrl.protocol));
 };
 
 /**
