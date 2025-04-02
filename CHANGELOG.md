@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.20
+
+### Patch Changes
+
+- [#253](https://github.com/Robot-Inventor/rehype-og-card/pull/253) [`0cc005a`](https://github.com/Robot-Inventor/rehype-og-card/commit/0cc005a219feb88baf50b10105679c90cfd3b57c) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency remark-rehype to v11.1.2
+
 ## 1.0.19
 
 ### Patch Changes
