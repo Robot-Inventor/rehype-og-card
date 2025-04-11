@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.21
+
+### Patch Changes
+
+- [#259](https://github.com/Robot-Inventor/rehype-og-card/pull/259) [`b5d4a67`](https://github.com/Robot-Inventor/rehype-og-card/commit/b5d4a671ae45298f3943b8b5afabfd009e4ed63f) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps-dev): bump vite from 6.2.5 to 6.2.6
+
 ## 1.0.20
 
 ### Patch Changes
