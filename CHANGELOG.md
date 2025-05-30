@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.24
+
+### Patch Changes
+
+- [#279](https://github.com/Robot-Inventor/rehype-og-card/pull/279) [`c4c5fd6`](https://github.com/Robot-Inventor/rehype-og-card/commit/c4c5fd6349dd178c738c6ddcb96012ca5ba374b6) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: ensure link text matches href after trimming whitespace
+
 ## 1.0.23
 
 ### Patch Changes
