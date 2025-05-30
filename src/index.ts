@@ -83,7 +83,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                     node.children.length === 1 &&
                     node.children[0] &&
                     isTextNode(node.children[0]) &&
-                    node.children[0].value === node.properties.href;
+                    node.children[0].value.trim() === node.properties.href;
 
                 if (!isSameTextURL) return;
 
