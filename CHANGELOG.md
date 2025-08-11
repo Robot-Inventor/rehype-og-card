@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.0.25
+
+### Patch Changes
+
+- [#300](https://github.com/Robot-Inventor/rehype-og-card/pull/300) [`48cd210`](https://github.com/Robot-Inventor/rehype-og-card/commit/48cd210aa35f92deb20f860a869c2e15cc59c9f1) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - ci: migrate from npm token to trusted publishing
+
 ## 1.0.24
 
 ### Patch Changes
