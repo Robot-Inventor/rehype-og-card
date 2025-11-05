@@ -21,7 +21,7 @@ const isValidURL = (url: string): boolean => {
  * Resolve an absolute URL from a raw URL and a base URL.
  * @param rawURL Raw URL to resolve.
  * @param baseURL Base URL to resolve against.
- * @returns Resolved absolute URL or `null` if the raw URL is invalid.
+ * @returns Resolved absolute URL or `undefined` if the raw URL is invalid.
  */
 const resolveAbsoluteURL = (rawURL: string | undefined, baseURL: string): string | undefined => {
     // eslint-disable-next-line no-undefined
