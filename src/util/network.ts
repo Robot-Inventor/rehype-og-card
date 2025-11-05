@@ -18,6 +18,21 @@ const isValidURL = (url: string): boolean => {
 };
 
 /**
+ * Resolve an absolute URL from a raw URL and a base URL.
+ * @param rawURL Raw URL to resolve.
+ * @param baseURL Base URL to resolve against.
+ * @returns Resolved absolute URL or `null` if the raw URL is invalid.
+ */
+const resolveAbsoluteURL = (rawURL: string | undefined, baseURL: string): string | undefined => {
+    // eslint-disable-next-line no-undefined
+    if (!rawURL) return undefined;
+
+    const parsedUrl = URL.parse(rawURL, baseURL);
+    // eslint-disable-next-line no-undefined
+    return parsedUrl ? parsedUrl.href : undefined;
+};
+
+/**
  * Get OG card data from given URL.
  * @param url URL to get OG card data.
  * @param userAgent User agent to use for fetching.
@@ -34,6 +49,7 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             url
         });
         const OGImage = result.ogImage ? result.ogImage[0] : null;
+        const OGImageURL = resolveAbsoluteURL(OGImage?.url, url);
         const faviconURL = result.favicon
             ? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`
             : // eslint-disable-next-line no-undefined
@@ -41,7 +57,7 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
         return {
             OGImageAlt: OGImage?.alt,
             OGImageHeight: OGImage?.height,
-            OGImageURL: OGImage?.url,
+            OGImageURL,
             OGImageWidth: OGImage?.width,
             description: result.ogDescription,
             displayURL: url,
