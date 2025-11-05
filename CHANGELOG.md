@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 1.1.0
+
+### Minor Changes
+
+- [#330](https://github.com/Robot-Inventor/rehype-og-card/pull/330) [`784ba14`](https://github.com/Robot-Inventor/rehype-og-card/commit/784ba1492cc8dce3536eeaadd92c330ecc91b31e) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add support for root relative paths for thumbnails
+
 ## 1.0.27
 
 ### Patch Changes
