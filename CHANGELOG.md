@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 1.1.1
+
+### Patch Changes
+
+- [#346](https://github.com/Robot-Inventor/rehype-og-card/pull/346) [`37efcab`](https://github.com/Robot-Inventor/rehype-og-card/commit/37efcab5567568298ab4b33e8ffc9eb6792a32e8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump mdast-util-to-hast from 13.2.0 to 13.2.1
+
+- [#342](https://github.com/Robot-Inventor/rehype-og-card/pull/342) [`6d6a0c3`](https://github.com/Robot-Inventor/rehype-og-card/commit/6d6a0c3cae194b34483def406024be466adc964b) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency open-graph-scraper to v6.11.0
+
 ## 1.1.0
 
 ### Minor Changes
