@@ -91,7 +91,7 @@ interface DownloadImageOptions {
      * Cache expiration time in milliseconds.
      * Set to `false` to disable expiration.
      */
-    cacheMaxAge?: number | false;
+    cacheMaxAge: number | false;
 }
 
 /**
@@ -120,7 +120,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
 
             const entry = index[filename];
             const cachedAt = entry?.createdAt;
-            const maxAge = options.cacheMaxAge ?? false;
+            const maxAge = options.cacheMaxAge;
             if (typeof cachedAt === "number" && !isCacheExpired(cachedAt, maxAge)) return filename;
 
             if (typeof entry !== "undefined") {
