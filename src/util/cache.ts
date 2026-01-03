@@ -166,6 +166,8 @@ const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: strin
     if (serverCacheExists && !buildCacheExists) {
         await fs.copyFile(serverCachePath, buildCachePath);
     }
+    const buildCacheExistsAfter = await checkFileExists(buildCachePath);
+    if (!buildCacheExistsAfter) return;
 
     const serverDirectory = path.dirname(serverCachePath);
     const buildDirectory = path.dirname(buildCachePath);
