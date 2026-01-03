@@ -182,6 +182,41 @@ https://blog.google/products/android/world-emoji-day-2024/
     expect(cache.length).toBe(3);
 });
 
+it("server cache should expire images and re-download", async () => {
+    const serverCachePath = "./.cache-expire-server/";
+    const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
+    const imageFilename = "43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png";
+
+    await fs.rm(serverCachePath, { recursive: true, force: true });
+    const processor = processorFactory({ serverCache: true, serverCachePath, serverCacheMaxAge: 1 });
+
+    const input = `
+https://blog.google/products/android/world-emoji-day-2024/
+    `.trim();
+
+    await processor.process(input);
+
+    const indexBefore = await readCacheIndex(cacheDirectory);
+    const createdAtBefore = indexBefore[imageFilename]?.createdAt;
+    expect(typeof createdAtBefore).toBe("number");
+
+    const imagePath = path.join(cacheDirectory, imageFilename);
+    const statBefore = await fs.stat(imagePath);
+
+    indexBefore[imageFilename] = { createdAt: Date.now() - 1000 };
+    await writeCacheIndex(cacheDirectory, indexBefore);
+
+    await processor.process(input);
+
+    const indexAfter = await readCacheIndex(cacheDirectory);
+    const createdAtAfter = indexAfter[imageFilename]?.createdAt;
+    expect(typeof createdAtAfter).toBe("number");
+    expect(createdAtAfter).toBeGreaterThan(createdAtBefore as number);
+
+    const statAfter = await fs.stat(imagePath);
+    expect(statAfter.mtimeMs).toBeGreaterThan(statBefore.mtimeMs);
+});
+
 it("build cache expiration should prune images and metadata", async () => {
     const buildCachePath = "./.buildCache-expire/rehype-og-card";
     const serverCachePath = "./.cache-expire/rehype-og-card";
