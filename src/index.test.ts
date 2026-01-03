@@ -173,16 +173,15 @@ http://test.localhost:3456/test-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/4353dfc3b09e77a37e2309cd495b3ce1b1136f4eeaab7b6144d4b553f2f6c037" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
-    // The cache contains: 1 OG image file + 1 cache index file
-    // (favicon is not cached because Google's favicon service is not accessible in test environment)
+    // The cache contains: 1 OG image file + 1 favicon file + 1 cache index file
     const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(2);
+    expect(cache.length).toBe(3);
 });
 
 it("server cache expiration disabled should keep cached images", async () => {
@@ -338,7 +337,7 @@ http://test.localhost:3456/test-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/4353dfc3b09e77a37e2309cd495b3ce1b1136f4eeaab7b6144d4b553f2f6c037" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -347,10 +346,9 @@ http://test.localhost:3456/test-page
     // Wait for cache to be saved.
     await setTimeout(1000);
 
-    // The cache contains: 1 OG image file + 1 OG metadata JSON file + 1 cache index file
-    // (favicon is not cached because Google's favicon service is not accessible in test environment)
+    // The cache contains: 1 OG image file + 1 favicon file + 1 OG metadata JSON file + 1 cache index file
     const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(3);
+    expect(cache.length).toBe(4);
 });
 
 it("restoreOGDataBuildCache should remove expired metadata", async () => {
