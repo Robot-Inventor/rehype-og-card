@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import fsSync from "fs";
 import path from "path";
 import { type } from "arktype";
+import { setTimeout } from "timers/promises";
 
 /**
  * Check whether a cache entry is expired.
@@ -17,6 +18,7 @@ const isCacheExpired = (cachedAtMs: number, maxAgeMs: number | false): boolean =
 };
 
 const CACHE_INDEX_FILENAME = "cache.json";
+const CACHE_INDEX_LOCK_FILENAME = "cache.json.lock";
 
 /**
  * Get the cache index path for a directory.
@@ -24,6 +26,59 @@ const CACHE_INDEX_FILENAME = "cache.json";
  * @returns Cache index path.
  */
 const getCacheIndexPath = (directory: string): string => path.join(directory, CACHE_INDEX_FILENAME);
+const getCacheIndexLockPath = (directory: string): string => path.join(directory, CACHE_INDEX_LOCK_FILENAME);
+
+const sleepSync = (ms: number): void => {
+    const buffer = new SharedArrayBuffer(4);
+    const view = new Int32Array(buffer);
+    Atomics.wait(view, 0, 0, ms);
+};
+
+const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<void>) | null> => {
+    const lockPath = getCacheIndexLockPath(directory);
+    const maxRetries = 50;
+    const delayMs = 20;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+        try {
+            const handle = await fs.open(lockPath, "wx");
+            await handle.close();
+            return async () => {
+                await fs.rm(lockPath, { force: true });
+            };
+        } catch (error) {
+            const err = error as NodeJS.ErrnoException;
+            if (err.code !== "EEXIST") throw error;
+            if (attempt === maxRetries) return null;
+            await setTimeout(delayMs);
+        }
+    }
+
+    return null;
+};
+
+const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
+    const lockPath = getCacheIndexLockPath(directory);
+    const maxRetries = 50;
+    const delayMs = 20;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+        try {
+            const fd = fsSync.openSync(lockPath, "wx");
+            fsSync.closeSync(fd);
+            return () => {
+                fsSync.rmSync(lockPath, { force: true });
+            };
+        } catch (error) {
+            const err = error as NodeJS.ErrnoException;
+            if (err.code !== "EEXIST") throw error;
+            if (attempt === maxRetries) return null;
+            sleepSync(delayMs);
+        }
+    }
+
+    return null;
+};
 
 /**
  * Read cache index synchronously.
@@ -50,7 +105,14 @@ const readCacheIndexSync = (directory: string): CacheIndex => {
  */
 const writeCacheIndexSync = (directory: string, index: CacheIndex): void => {
     const indexPath = getCacheIndexPath(directory);
-    fsSync.writeFileSync(indexPath, JSON.stringify(index));
+    const tempPath = `${indexPath}.tmp`;
+    const releaseLock = acquireCacheIndexLockSync(directory);
+    try {
+        fsSync.writeFileSync(tempPath, JSON.stringify(index));
+        fsSync.renameSync(tempPath, indexPath);
+    } finally {
+        releaseLock?.();
+    }
 };
 
 /**
@@ -80,7 +142,14 @@ const readCacheIndex = async (directory: string): Promise<CacheIndex> => {
  */
 const writeCacheIndex = async (directory: string, index: CacheIndex): Promise<void> => {
     const indexPath = getCacheIndexPath(directory);
-    await fs.writeFile(indexPath, JSON.stringify(index));
+    const tempPath = `${indexPath}.tmp`;
+    const releaseLock = await acquireCacheIndexLock(directory);
+    try {
+        await fs.writeFile(tempPath, JSON.stringify(index));
+        await fs.rename(tempPath, indexPath);
+    } finally {
+        await releaseLock?.();
+    }
 };
 
 /**
@@ -116,7 +185,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
         }
 
         // eslint-disable-next-line no-continue
-        if (entry.name === CACHE_INDEX_FILENAME) continue;
+        if (entry.name === CACHE_INDEX_FILENAME || entry.name === CACHE_INDEX_LOCK_FILENAME) continue;
 
         if (entry.name.endsWith(".json")) {
             try {
