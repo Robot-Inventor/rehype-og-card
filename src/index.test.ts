@@ -2,6 +2,7 @@ import { expect, it } from "vitest";
 import rehypeOGCard, { RehypeOGCardOptions } from "./index.js";
 import { readCacheIndex, restoreBuildCache, restoreOGDataBuildCache, writeCacheIndex } from "./util/cache.js";
 import { checkFileExists, generateFilename } from "./util/file.js";
+import { downloadImage } from "./util/network.js";
 import type { CacheIndex, OGCardData } from "./types.js";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -182,6 +183,36 @@ https://blog.google/products/android/world-emoji-day-2024/
     expect(cache.length).toBe(3);
 });
 
+it("server cache expiration disabled should keep cached images", async () => {
+    const serverCachePath = "./.cache-no-expire/rehype-og-card";
+
+    await fs.rm("./.cache-no-expire", { recursive: true, force: true });
+    await fs.mkdir(serverCachePath, { recursive: true });
+
+    const url = "https://example.com/image.png";
+    const filename = generateFilename(url);
+    const filePath = path.join(serverCachePath, filename);
+    await fs.writeFile(filePath, "image");
+
+    const cacheIndex = { [filename]: { createdAt: Date.now() - 1000 } } as const satisfies CacheIndex;
+    await writeCacheIndex(serverCachePath, cacheIndex);
+
+    const statBefore = await fs.stat(filePath);
+    const restored = await downloadImage({
+        cacheMaxAge: false,
+        directory: serverCachePath,
+        url,
+        userAgent: "rehype-og-card-test"
+    });
+    expect(restored).toBe(filename);
+
+    const statAfter = await fs.stat(filePath);
+    expect(statAfter.mtimeMs).toBe(statBefore.mtimeMs);
+
+    const indexAfter = await readCacheIndex(serverCachePath);
+    expect(indexAfter).toEqual(cacheIndex);
+});
+
 it("server cache should expire images and re-download", async () => {
     const serverCachePath = "./.cache-expire-server/";
     const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
@@ -249,6 +280,31 @@ it("build cache expiration should prune images and metadata", async () => {
 
     const cacheIndexAfterPrune = await readCacheIndex(buildCachePath);
     expect(cacheIndexAfterPrune).toEqual({});
+});
+
+it("build cache expiration disabled should keep entries", async () => {
+    const buildCachePath = "./.buildCache-no-expire/rehype-og-card";
+    const serverCachePath = "./.cache-no-expire-build/rehype-og-card";
+
+    await fs.rm("./.buildCache-no-expire", { recursive: true, force: true });
+    await fs.rm("./.cache-no-expire-build", { recursive: true, force: true });
+    await fs.mkdir(buildCachePath, { recursive: true });
+
+    const cachedAt = Date.now() - 1000;
+    await fs.writeFile(path.join(buildCachePath, "image.png"), "image");
+    const cacheIndex = { "image.png": { createdAt: cachedAt } } as const satisfies CacheIndex;
+    await writeCacheIndex(buildCachePath, cacheIndex);
+
+    restoreBuildCache(buildCachePath, serverCachePath, false);
+
+    const buildCacheEntries = (await fs.readdir(buildCachePath)).sort();
+    expect(buildCacheEntries).toEqual(["cache.json", "image.png"]);
+
+    const serverCacheEntries = (await fs.readdir(serverCachePath)).sort();
+    expect(serverCacheEntries).toEqual(["cache.json", "image.png"]);
+
+    const cacheIndexAfterRestore = await readCacheIndex(buildCachePath);
+    expect(cacheIndexAfterRestore).toEqual(cacheIndex);
 });
 
 it("should not convert URLs with non-HTTP(S) protocols", async () => {
