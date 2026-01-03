@@ -1,4 +1,4 @@
-import { startTestServer, stopTestServer } from "./server";
+import { startTestServer, stopTestServer } from "./server.js";
 
 export default async function setup() {
     await startTestServer();
