@@ -1,5 +1,7 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
 
+const TEST_SERVER_PORT = 3456;
+
 const TEST_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +74,7 @@ export const startTestServer = (): Promise<void> => {
             }
         });
 
-        server.listen(3456, () => {
+        server.listen(TEST_SERVER_PORT, () => {
             resolve();
         });
     });

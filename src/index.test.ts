@@ -179,6 +179,8 @@ http://test.localhost:3456/test-page
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
+    // The cache contains: 1 OG image file + 1 cache index file
+    // (favicon is not cached because Google's favicon service is not accessible in test environment)
     const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(2);
 });
@@ -216,6 +218,7 @@ it("server cache expiration disabled should keep cached images", async () => {
 it("server cache should expire images and re-download", async () => {
     const serverCachePath = "./.cache-expire-server/";
     const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
+    // This is the SHA-256 hash of "http://test.localhost:3456/test-image.png"
     const imageFilename = "e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
@@ -344,6 +347,8 @@ http://test.localhost:3456/test-page
     // Wait for cache to be saved.
     await setTimeout(1000);
 
+    // The cache contains: 1 OG image file + 1 OG metadata JSON file + 1 cache index file
+    // (favicon is not cached because Google's favicon service is not accessible in test environment)
     const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
     expect(cache.length).toBe(3);
 });
