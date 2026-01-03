@@ -1,10 +1,11 @@
+/* eslint-disable max-lines */
 import { type CacheIndex, type OGCardData, cacheIndexSchema } from "../types.js";
 import { checkFileExists, generateFilename } from "./file.js";
 import fs from "fs/promises";
 import fsSync from "fs";
 import path from "path";
-import { type } from "arktype";
 import { setTimeout } from "timers/promises";
+import { type } from "arktype";
 
 /**
  * Check whether a cache entry is expired.
@@ -26,20 +27,43 @@ const CACHE_INDEX_LOCK_FILENAME = "cache.json.lock";
  * @returns Cache index path.
  */
 const getCacheIndexPath = (directory: string): string => path.join(directory, CACHE_INDEX_FILENAME);
+/**
+ * Get the cache index lock path for a directory.
+ * @param directory Cache directory path.
+ * @returns Cache index lock path.
+ */
 const getCacheIndexLockPath = (directory: string): string => path.join(directory, CACHE_INDEX_LOCK_FILENAME);
 
+/**
+ * Sleep synchronously for a given duration.
+ * @param ms Duration in milliseconds.
+ */
 const sleepSync = (ms: number): void => {
+    // eslint-disable-next-line no-magic-numbers
     const buffer = new SharedArrayBuffer(4);
     const view = new Int32Array(buffer);
+    // eslint-disable-next-line no-magic-numbers
     Atomics.wait(view, 0, 0, ms);
 };
 
+/**
+ * Acquire the cache index lock.
+ * @param directory Cache directory path.
+ * @returns Release function or `null` if locking failed.
+ */
 const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<void>) | null> => {
     const lockPath = getCacheIndexLockPath(directory);
     const maxRetries = 50;
     const delayMs = 20;
+    const firstAttempt = 0;
+    const nextAttemptIncrement = 1;
 
-    for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    /**
+     * Try acquiring the cache index lock.
+     * @param attempt Current attempt count.
+     * @returns Release function or `null` if locking failed.
+     */
+    const tryAcquire = async (attempt: number): Promise<(() => Promise<void>) | null> => {
         try {
             const handle = await fs.open(lockPath, "wx");
             await handle.close();
@@ -49,20 +73,33 @@ const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<
         } catch (error) {
             const err = error as NodeJS.ErrnoException;
             if (err.code !== "EEXIST") throw error;
-            if (attempt === maxRetries) return null;
+            if (attempt >= maxRetries) return null;
             await setTimeout(delayMs);
+            return tryAcquire(attempt + nextAttemptIncrement);
         }
-    }
+    };
 
-    return null;
+    return tryAcquire(firstAttempt);
 };
 
+/**
+ * Acquire the cache index lock synchronously.
+ * @param directory Cache directory path.
+ * @returns Release function or `null` if locking failed.
+ */
 const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
     const lockPath = getCacheIndexLockPath(directory);
     const maxRetries = 50;
     const delayMs = 20;
+    const firstAttempt = 0;
+    const nextAttemptIncrement = 1;
 
-    for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    /**
+     * Try acquiring the cache index lock synchronously.
+     * @param attempt Current attempt count.
+     * @returns Release function or `null` if locking failed.
+     */
+    const tryAcquire = (attempt: number): (() => void) | null => {
         try {
             const fd = fsSync.openSync(lockPath, "wx");
             fsSync.closeSync(fd);
@@ -72,12 +109,13 @@ const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
         } catch (error) {
             const err = error as NodeJS.ErrnoException;
             if (err.code !== "EEXIST") throw error;
-            if (attempt === maxRetries) return null;
+            if (attempt >= maxRetries) return null;
             sleepSync(delayMs);
+            return tryAcquire(attempt + nextAttemptIncrement);
         }
-    }
+    };
 
-    return null;
+    return tryAcquire(firstAttempt);
 };
 
 /**
