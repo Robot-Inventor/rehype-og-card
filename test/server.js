@@ -5,10 +5,11 @@ const TEST_HTML = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="http://localhost:3456/test-image.png">
+    <meta property="og:image" content="http://test.localhost:3456/test-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Test image alt text">
+    <link rel="icon" href="/favicon.ico">
     <title>Test Page Title</title>
 </head>
 <body>
@@ -20,6 +21,7 @@ const SIMPLE_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
     <title>Example Domain</title>
 </head>
 <body>
@@ -51,6 +53,10 @@ export const startTestServer = () => {
                 res.end(SIMPLE_HTML);
             }
             else if (req.url === "/test-image.png") {
+                res.writeHead(200, { "Content-Type": "image/png" });
+                res.end(SIMPLE_PNG);
+            }
+            else if (req.url === "/favicon.ico") {
                 res.writeHead(200, { "Content-Type": "image/png" });
                 res.end(SIMPLE_PNG);
             }

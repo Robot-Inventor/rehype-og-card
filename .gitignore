@@ -9,3 +9,4 @@ dist/
 .buildCache-expire/
 .buildCache-expire-meta/
 .buildCache-no-expire/
+test/*.js

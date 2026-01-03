@@ -34,7 +34,7 @@ http://test.localhost:3456/test-page
     const expected = `
 <p>this is a link: http://test.localhost:3456/test-page</p>
 <p><code>http://test.localhost:3456/test-page</code></p>
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost:3456</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" loading="lazy" src="http://test.localhost:3456/test-image.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="http://test.localhost:3456/test-image.png" width="1200"></div></a></div></p>
 <p><a href="http://test.localhost:3456/test-page">http://test.localhost:3456/test-page</a></p>
 <p><a href="http://test.localhost:3456/test-page">Test page</a></p>
     `.trim();
@@ -62,7 +62,7 @@ http://test.localhost:3456/test-page
 <h1>Title</h1>
 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum voluptates eos hic nobis optio inventore dolores cum repellat.</p>
 <p>Esse officia a perspiciatis nihil dolore quam doloremque distinctio iure beatae!</p>
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost:3456</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" loading="lazy" src="http://test.localhost:3456/test-image.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="http://test.localhost:3456/test-image.png" width="1200"></div></a></div></p>
 <p><a href="https://example.com">This link</a> is a link to example.com and should not be converted to an OG card.</p>
     `.trim();
 
@@ -93,7 +93,7 @@ it("`enableSameTextURLConversion` option should convert same text URL to anchor 
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost:3456</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" loading="lazy" src="http://test.localhost:3456/test-image.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="http://test.localhost:3456/test-image.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -121,11 +121,11 @@ it("if the website does not have some of the OG tags, it should not throw an err
     const processor = processorFactory({ serverCache: false });
 
     const input = `
-https://example.com
+http://test.localhost:3456/simple-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="https://example.com"><div class="og-card-info"><div class="og-card-title">Example Domain</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" width="16"><span class="og-card-url">example.com</span></div></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/simple-page"><div class="og-card-info"><div class="og-card-title">Example Domain</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -155,7 +155,7 @@ http://test.localhost:3456/test-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">http://test.localhost:3456/test-page</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" loading="lazy" src="http://test.localhost:3456/test-image.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">http://test.localhost:3456/test-page</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="http://test.localhost:3456/test-image.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -173,14 +173,14 @@ http://test.localhost:3456/test-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" width="16"><span class="og-card-url">test.localhost:3456</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" decoding="async" loading="lazy" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
     const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(3);
+    expect(cache.length).toBe(2);
 });
 
 it("server cache expiration disabled should keep cached images", async () => {
@@ -216,7 +216,7 @@ it("server cache expiration disabled should keep cached images", async () => {
 it("server cache should expire images and re-download", async () => {
     const serverCachePath = "./.cache-expire-server/";
     const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
-    const imageFilename = "43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png";
+    const imageFilename = "e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath, serverCacheMaxAge: 100 });
@@ -335,7 +335,7 @@ http://test.localhost:3456/test-page
     `.trim();
 
     const expected = `
-<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="/rehype-og-card/6400e93e712801882b406ea099a1e0a169968e1f7832730edda039a413889df8" width="16"><span class="og-card-url">test.localhost:3456</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png" decoding="async" loading="lazy" src="/rehype-og-card/43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png"></div></a></div></p>
+<p><div class="og-card-container"><a href="http://test.localhost:3456/test-page"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><img class="og-card-favicon" alt="favicon" decoding="async" height="16" loading="lazy" src="https://www.google.com/s2/favicons?domain=test.localhost" width="16"><span class="og-card-url">test.localhost</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/e12f505fe869653361830294ecbbbb7dcfb2a2a86c9a4b094f780f26b048936f.png" width="1200"></div></a></div></p>
     `.trim();
 
     const result = await processor.process(input);
@@ -345,7 +345,7 @@ http://test.localhost:3456/test-page
     await setTimeout(1000);
 
     const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(4);
+    expect(cache.length).toBe(3);
 });
 
 it("restoreOGDataBuildCache should remove expired metadata", async () => {
