@@ -15,8 +15,14 @@ import { isElement } from "hast-util-is-element";
 import path from "path";
 import { visitParents } from "unist-util-visit-parents";
 
+// eslint-disable-next-line no-magic-numbers
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+// eslint-disable-next-line no-magic-numbers
+const DEFAULT_CACHE_MAX_AGE_MS = 30 * ONE_DAY_MS;
+
 const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     buildCache: false,
+    buildCacheMaxAge: DEFAULT_CACHE_MAX_AGE_MS,
     buildCachePath: "./node_modules/.cache",
     crawlerUserAgent:
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
@@ -26,6 +32,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     loading: "lazy",
     openInNewTab: false,
     serverCache: true,
+    serverCacheMaxAge: DEFAULT_CACHE_MAX_AGE_MS,
     serverCachePath: "./public",
     shortenURL: true
 } as const;
@@ -54,7 +61,11 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     const buildCacheExists = checkFileExistsSync(mergedOptions.buildCachePath);
     if (mergedOptions.buildCache) {
         if (buildCacheExists) {
-            restoreBuildCache(mergedOptions.buildCachePath, mergedOptions.serverCachePath);
+            restoreBuildCache(
+                mergedOptions.buildCachePath,
+                mergedOptions.serverCachePath,
+                mergedOptions.buildCacheMaxAge
+            );
         } else {
             createDirectorySync(mergedOptions.buildCachePath);
         }
@@ -113,7 +124,11 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function
             const linkCardPromise = async (): Promise<void> => {
                 let OGData = mergedOptions.buildCache
-                    ? await restoreOGDataBuildCache(anchorNode.properties.href, mergedOptions.buildCachePath)
+                    ? await restoreOGDataBuildCache(
+                          anchorNode.properties.href,
+                          mergedOptions.buildCachePath,
+                          mergedOptions.buildCacheMaxAge
+                      )
                     : null;
 
                 if (!OGData) {
@@ -126,6 +141,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 if (OGData.OGImageURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
+                        cacheMaxAge: mergedOptions.serverCacheMaxAge,
                         directory: mergedOptions.serverCachePath,
                         url: OGData.OGImageURL,
                         userAgent: mergedOptions.crawlerUserAgent
@@ -144,6 +160,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 if (OGData.faviconURL && mergedOptions.serverCache) {
                     const filename = await downloadImage({
+                        cacheMaxAge: mergedOptions.serverCacheMaxAge,
                         directory: mergedOptions.serverCachePath,
                         url: OGData.faviconURL,
                         userAgent: mergedOptions.crawlerUserAgent

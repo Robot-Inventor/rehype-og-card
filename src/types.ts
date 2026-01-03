@@ -1,3 +1,5 @@
+import { type } from "arktype";
+
 interface RehypeOGCardOptions {
     /**
      * Domains to exclude from conversion.
@@ -42,6 +44,13 @@ interface RehypeOGCardOptions {
      */
     serverCachePath?: string;
     /**
+     * Cache expiration time for server cache in milliseconds.
+     * Set to `false` to disable expiration.
+     * Expiration is calculated from the cached timestamp stored in the cache itself.
+     * @default 2592000000
+     */
+    serverCacheMaxAge?: number | false;
+    /**
      * Whether to cache the OG metadata and images for the next build.
      * `buildCache` option requires `serverCache` option to be enabled.
      * @default false
@@ -53,6 +62,13 @@ interface RehypeOGCardOptions {
      * @default "./node_modules/.cache"
      */
     buildCachePath?: string;
+    /**
+     * Cache expiration time for build cache in milliseconds.
+     * Set to `false` to disable expiration.
+     * Expiration is calculated from the cached timestamp stored in the cache itself.
+     * @default 2592000000
+     */
+    buildCacheMaxAge?: number | false;
     /**
      * User agent to use for fetching the OG metadata and images.
      * @default "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
@@ -72,4 +88,12 @@ interface OGCardData {
     OGImageHeight?: number | undefined;
 }
 
-export type { RehypeOGCardOptions, OGCardData };
+const cacheIndexSchema = type({
+    "[string]": {
+        createdAt: "number"
+    }
+});
+
+type CacheIndex = typeof cacheIndexSchema.infer;
+
+export { cacheIndexSchema, type RehypeOGCardOptions, type OGCardData, type CacheIndex };

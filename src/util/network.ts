@@ -1,4 +1,5 @@
 import { checkFileExists, generateFilename } from "./file.js";
+import { isCacheExpired, readCacheIndex, writeCacheIndex } from "./cache.js";
 import type { OGCardData } from "../types.js";
 import fetch from "node-fetch";
 import fs from "fs/promises";
@@ -86,6 +87,11 @@ interface DownloadImageOptions {
      * User agent to use for fetching the image.
      */
     userAgent: string;
+    /**
+     * Cache expiration time in milliseconds.
+     * Set to `false` to disable expiration.
+     */
+    cacheMaxAge: number | false;
 }
 
 /**
@@ -93,7 +99,7 @@ interface DownloadImageOptions {
  * @param options Options to download image.
  * @returns Filename of the downloaded image.
  */
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 const downloadImage = async (options: DownloadImageOptions): Promise<string | null> => {
     if (!isValidURL(options.url)) {
         // eslint-disable-next-line no-console
@@ -107,7 +113,24 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
 
         // If the file already exists, return the filename.
         const fileExists = await checkFileExists(savePath);
-        if (fileExists) return filename;
+        if (fileExists) {
+            if (options.cacheMaxAge === false) return filename;
+
+            const index = await readCacheIndex(options.directory);
+
+            const entry = index[filename];
+            const cachedAt = entry?.createdAt;
+            const maxAge = options.cacheMaxAge;
+            if (typeof cachedAt === "number" && !isCacheExpired(cachedAt, maxAge)) return filename;
+
+            if (typeof entry !== "undefined") {
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                delete index[filename];
+                await writeCacheIndex(options.directory, index);
+            }
+
+            await fs.rm(savePath, { force: true });
+        }
 
         const response = await fetch(options.url, {
             headers: {
@@ -125,6 +148,11 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
             await fs.mkdir(options.directory, { recursive: true });
         }
         await fs.writeFile(savePath, buffer);
+
+        const cachedAt = Date.now();
+        const index = await readCacheIndex(options.directory);
+        index[filename] = { createdAt: cachedAt };
+        await writeCacheIndex(options.directory, index);
 
         return filename;
     } catch (error) {

@@ -115,6 +115,14 @@ Path to save the build cache. For Astro projects, specify the `./node_modules/.a
 - Type: `string`
 - Default: `"./.cache/og-card"`
 
+### `buildCacheMaxAge`
+
+Cache expiration time for build cache in milliseconds. Set to `false` to disable expiration.
+Expiration is calculated using the cached timestamp stored in the cache itself.
+
+- Type: `number | false`
+- Default: `2592000000` (30 days)
+
 ### `crawlerUserAgent`
 
 User agent to use for fetching the OG metadata and images.
@@ -170,6 +178,14 @@ Path to save the server cache. Specify the directory whose contents will be copi
 
 - Type: `string`
 - Default: `"./public"`
+
+### `serverCacheMaxAge`
+
+Cache expiration time for server cache in milliseconds. Set to `false` to disable expiration.
+Expiration is calculated using the cached timestamp stored in the cache itself.
+
+- Type: `number | false`
+- Default: `2592000000` (30 days)
 
 ### `shortenURL`
 
