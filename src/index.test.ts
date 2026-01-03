@@ -188,7 +188,7 @@ it("server cache should expire images and re-download", async () => {
     const imageFilename = "43abb4af7ecae4a12a08f8381233161239d30a562dd395eefa3ce7aa81658644.png";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
-    const processor = processorFactory({ serverCache: true, serverCachePath, serverCacheMaxAge: 1 });
+    const processor = processorFactory({ serverCache: true, serverCachePath, serverCacheMaxAge: 100 });
 
     const input = `
 https://blog.google/products/android/world-emoji-day-2024/
