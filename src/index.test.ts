@@ -1,5 +1,8 @@
 import { expect, it } from "vitest";
 import rehypeOGCard, { RehypeOGCardOptions } from "./index.js";
+import { readCacheIndex, restoreBuildCache, restoreOGDataBuildCache, writeCacheIndex } from "./util/cache.js";
+import { checkFileExists, generateFilename } from "./util/file.js";
+import type { CacheIndex, OGCardData } from "./types.js";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
@@ -176,7 +179,41 @@ https://blog.google/products/android/world-emoji-day-2024/
     expect(result.toString().trim()).toBe(expected);
 
     const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(2);
+    expect(cache.length).toBe(3);
+});
+
+it("build cache expiration should prune images and metadata", async () => {
+    const buildCachePath = "./.buildCache-expire/rehype-og-card";
+    const serverCachePath = "./.cache-expire/rehype-og-card";
+
+    await fs.rm("./.buildCache-expire", { recursive: true, force: true });
+    await fs.rm("./.cache-expire", { recursive: true, force: true });
+    await fs.mkdir(buildCachePath, { recursive: true });
+
+    const cachedAt = Date.now() - 1000;
+    await fs.writeFile(path.join(buildCachePath, "image.png"), "image");
+    const cacheIndex = { "image.png": { createdAt: cachedAt } } as const satisfies CacheIndex;
+    await writeCacheIndex(buildCachePath, cacheIndex);
+    const ogUrl = "https://example.com";
+    const ogFilename = `${generateFilename(ogUrl, false)}.json`;
+    const ogPayload = {
+        cachedAt,
+        displayURL: "example.com",
+        title: "Example Domain",
+        url: ogUrl
+    } as const satisfies OGCardData & { cachedAt: number };
+    await fs.writeFile(path.join(buildCachePath, ogFilename), JSON.stringify(ogPayload));
+
+    restoreBuildCache(buildCachePath, serverCachePath, 1);
+
+    const buildCacheEntries = (await fs.readdir(buildCachePath)).sort();
+    expect(buildCacheEntries).toEqual(["cache.json"]);
+
+    const serverCacheEntries = (await fs.readdir(serverCachePath)).sort();
+    expect(serverCacheEntries).toEqual(["cache.json"]);
+
+    const cacheIndexAfterPrune = await readCacheIndex(buildCachePath);
+    expect(cacheIndexAfterPrune).toEqual({});
 });
 
 it("should not convert URLs with non-HTTP(S) protocols", async () => {
@@ -217,5 +254,29 @@ https://blog.google/products/android/world-emoji-day-2024/
     await setTimeout(1000);
 
     const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
-    expect(cache.length).toBe(3);
+    expect(cache.length).toBe(4);
+});
+
+it("restoreOGDataBuildCache should remove expired metadata", async () => {
+    const buildCachePath = "./.buildCache-expire-meta/rehype-og-card";
+
+    await fs.rm("./.buildCache-expire-meta", { recursive: true, force: true });
+    await fs.mkdir(buildCachePath, { recursive: true });
+
+    const url = "https://example.com";
+    const filename = generateFilename(url, false);
+    const savePath = path.join(buildCachePath, `${filename}.json`);
+    const expiredPayload = {
+        cachedAt: Date.now() - 1000,
+        displayURL: "example.com",
+        title: "Example Domain",
+        url
+    } as const satisfies OGCardData & { cachedAt: number };
+    await fs.writeFile(savePath, JSON.stringify(expiredPayload));
+
+    const restored = await restoreOGDataBuildCache(url, buildCachePath, 1);
+    expect(restored).toBeNull();
+
+    const exists = await checkFileExists(savePath);
+    expect(exists).toBe(false);
 });

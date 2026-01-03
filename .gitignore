@@ -2,3 +2,6 @@ node_modules/
 dist/
 .cache/
 .buildCache/
+.cache-expire/
+.buildCache-expire/
+.buildCache-expire-meta/
