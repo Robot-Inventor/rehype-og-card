@@ -128,7 +128,7 @@ Expiration is calculated using the cached timestamp stored in the cache itself.
 User agent to use for fetching the OG metadata and images.
 
 - Type: `string`
-- Default: `"Mozilla/5.0 (compatible; Googlebot/2.1; Twitterbot/1.0; Discordbot/2.0; rehype-og-card/2.0; +https://github.com/Robot-Inventor/rehype-og-card/) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"`
+- Default: `"Mozilla/5.0 (compatible; rehype-og-card/2.0; +https://github.com/Robot-Inventor/rehype-og-card/; purpose=link-preview; twitterbot-compatible)"`
 
 ### `decoding`
 
