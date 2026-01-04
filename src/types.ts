@@ -71,7 +71,7 @@ interface RehypeOGCardOptions {
     buildCacheMaxAge?: number | false;
     /**
      * User agent to use for fetching the OG metadata and images.
-     * @default "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+     * @default "Mozilla/5.0 (compatible; rehype-og-card/2.0; +https://github.com/Robot-Inventor/rehype-og-card/; purpose=link-preview; twitterbot-compatible)"
      */
     crawlerUserAgent?: string;
 }
