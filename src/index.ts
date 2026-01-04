@@ -25,7 +25,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     buildCacheMaxAge: DEFAULT_CACHE_MAX_AGE_MS,
     buildCachePath: "./node_modules/.cache",
     crawlerUserAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (compatible; Googlebot/2.1; Twitterbot/1.0; Discordbot/2.0; rehype-og-card/2.0; +https://github.com/Robot-Inventor/rehype-og-card/) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
     decoding: "async",
     enableSameTextURLConversion: false,
     excludeDomains: [] as const,
