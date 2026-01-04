@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 2.0.0
+
+### Major Changes
+
+- [#357](https://github.com/Robot-Inventor/rehype-og-card/pull/357) [`193b2fe`](https://github.com/Robot-Inventor/rehype-og-card/commit/193b2fe18df836fc9d603c58edf71b8e88ebf695) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add cache expiration options for build and server cache
+
+    Note: When `buildCacheMaxAge` is set to a number (default 30 days), legacy build cache entries created by older versions without `cachedAt` (and image entries missing `cache.json`) may be deleted on first run.
+
 ## 1.1.1
 
 ### Patch Changes
