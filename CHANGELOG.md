@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 2.0.1
+
+### Patch Changes
+
+- [#361](https://github.com/Robot-Inventor/rehype-og-card/pull/361) [`8b154c5`](https://github.com/Robot-Inventor/rehype-og-card/commit/8b154c5b0e9017b0232df41ea4b8fb418a363984) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: publish `dist` directory to npm correctly
+
 ## 2.0.0
 
 ### Major Changes
