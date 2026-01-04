@@ -1,6 +1,6 @@
 {
   "name": "rehype-og-card",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Rehype plugin to convert text links to link cards",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
