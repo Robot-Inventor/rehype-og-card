@@ -8,7 +8,7 @@ const TEST_HTML = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="http://test.localhost:3456/test-image.png">
+    <meta property="og:image" content="http://127.0.0.1:3456/test-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Test image alt text">
