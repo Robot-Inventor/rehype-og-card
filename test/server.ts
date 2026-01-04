@@ -74,7 +74,7 @@ export const startTestServer = (): Promise<void> => {
             }
         });
 
-        server.listen(TEST_SERVER_PORT, () => {
+        server.listen(TEST_SERVER_PORT, "127.0.0.1", () => {
             resolve();
         });
     });
