@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 2.0.2
+
+### Patch Changes
+
+- [#364](https://github.com/Robot-Inventor/rehype-og-card/pull/364) [`cbcb63c`](https://github.com/Robot-Inventor/rehype-og-card/commit/cbcb63c7641498daaf2b55d765ddd3c562f927b2) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: resolve occasional missing favicon src in link cards
+
+- [#363](https://github.com/Robot-Inventor/rehype-og-card/pull/363) [`915bf2c`](https://github.com/Robot-Inventor/rehype-og-card/commit/915bf2c533633c64a3af204f5ca53e971d14283a) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: update crawler UA to fix Amazon fetching
+
 ## 2.0.1
 
 ### Patch Changes
