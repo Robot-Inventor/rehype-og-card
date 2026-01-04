@@ -51,10 +51,8 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
         });
         const OGImage = result.ogImage ? result.ogImage[0] : null;
         const OGImageURL = resolveAbsoluteURL(OGImage?.url, url);
-        const faviconURL = result.favicon
-            ? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`
-            : // eslint-disable-next-line no-undefined
-              undefined;
+        const resolvedFaviconURL = result.favicon ? resolveAbsoluteURL(result.favicon, url) : null;
+        const faviconURL = resolvedFaviconURL ?? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`;
         return {
             OGImageAlt: OGImage?.alt,
             OGImageHeight: OGImage?.height,
