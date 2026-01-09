@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 3.0.0
+
+### Major Changes
+
+- [#368](https://github.com/Robot-Inventor/rehype-og-card/pull/368) [`b325384`](https://github.com/Robot-Inventor/rehype-og-card/commit/b325384c6e2ed3ce744c1f1a96c6edd8f8fe001d) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: remove parent `p` tag from link cards to prevent invalid HTML
+
+    You can disable this behavior by setting the `removeParentPTag` option to `false`.
+
 ## 2.0.2
 
 ### Patch Changes
