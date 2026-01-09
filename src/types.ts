@@ -26,6 +26,11 @@ interface RehypeOGCardOptions {
      */
     openInNewTab?: boolean;
     /**
+     * Whether to remove the parent `<p>` tag that contains only the bare link.
+     * @default true
+     */
+    removeParentPTag?: boolean;
+    /**
      * Whether to enable converting the links
      * that have the same URL and text (e.g., `[https://example.com](https://example.com)`).
      * @default false
