@@ -31,6 +31,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
     excludeDomains: [] as const,
     loading: "lazy",
     openInNewTab: false,
+    removeParentPTag: true,
     serverCache: true,
     serverCacheMaxAge: DEFAULT_CACHE_MAX_AGE_MS,
     serverCachePath: "./public",
@@ -121,7 +122,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             const targetURL = new URL(anchorNode.properties.href);
             if (mergedOptions.excludeDomains.includes(targetURL.hostname)) return;
 
-            // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function
+            // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function, complexity
             const linkCardPromise = async (): Promise<void> => {
                 let OGData = mergedOptions.buildCache
                     ? await restoreOGDataBuildCache(
@@ -184,11 +185,18 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                 const OGCard = createOGCard(OGData, mergedOptions);
 
-                const index = parent.children.indexOf(node);
+                const { removeParentPTag: shouldRemoveParentPTag } = mergedOptions;
+                // eslint-disable-next-line no-magic-numbers
+                const replacementContainer = shouldRemoveParentPTag ? ancestors[ancestors.length - 2] : parent;
+                const replacementTarget = shouldRemoveParentPTag ? parent : node;
+
+                if (!replacementContainer || !("children" in replacementContainer)) return;
+
+                const index = replacementContainer.children.indexOf(replacementTarget);
                 // eslint-disable-next-line no-magic-numbers
                 if (index === -1) return;
                 // eslint-disable-next-line no-magic-numbers
-                parent.children.splice(index, 1, OGCard);
+                replacementContainer.children.splice(index, 1, OGCard);
             };
             linkCardPromises.push(linkCardPromise());
         });

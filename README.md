@@ -63,7 +63,7 @@ Output (formatted for readability):
 ```html
 <p>this is a link: https://blog.google/products/android/world-emoji-day-2024/</p>
 <p><code>https://blog.google/products/android/world-emoji-day-2024/</code></p>
-<p><div class="og-card-container">
+<div class="og-card-container">
     <a href="https://blog.google/products/android/world-emoji-day-2024/">
         <div class="og-card-info">
             <div class="og-card-title">10 fun facts about emoji for World Emoji Day</div>
@@ -77,7 +77,7 @@ Output (formatted for readability):
             <img class="og-card-image" alt="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png" decoding="async" loading="lazy" src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/world_emoji_day_v2_1.width-1300.png">
         </div>
     </a>
-</div></p>
+</div>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">https://blog.google/products/android/world-emoji-day-2024/</a></p>
 <p><a href="https://blog.google/products/android/world-emoji-day-2024/">Google blog</a></p>
 ```
@@ -164,6 +164,13 @@ Whether to open the link in a new tab.
 
 - Type: `boolean`
 - Default: `false`
+
+### `removeParentPTag`
+
+Whether to remove the parent `<p>` tag that contains only the bare link.
+
+- Type: `boolean`
+- Default: `true`
 
 ### `serverCache`
 
