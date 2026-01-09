@@ -163,7 +163,7 @@ http://127.0.0.1:3456/test-page
 });
 
 it("server cache should work", async () => {
-    const serverCachePath = "./.cache/";
+    const serverCachePath = "./.cache/server-cache/";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath });
@@ -185,9 +185,9 @@ http://127.0.0.1:3456/test-page
 });
 
 it("server cache expiration disabled should keep cached images", async () => {
-    const serverCachePath = "./.cache-no-expire/rehype-og-card";
+    const serverCachePath = "./.cache/server-cache-no-expire/rehype-og-card";
 
-    await fs.rm("./.cache-no-expire", { recursive: true, force: true });
+    await fs.rm("./.cache/server-cache-no-expire", { recursive: true, force: true });
     await fs.mkdir(serverCachePath, { recursive: true });
 
     const url = "https://example.com/image.png";
@@ -215,7 +215,7 @@ it("server cache expiration disabled should keep cached images", async () => {
 });
 
 it("server cache should expire images and re-download", async () => {
-    const serverCachePath = "./.cache-expire-server/";
+    const serverCachePath = "./.cache/server-cache-expire/";
     const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
     // This is the SHA-256 hash of "http://127.0.0.1:3456/test-image.png"
     const imageFilename = "191e9828b06abb9605450abfdb0555bca5fc3c5d73433e2c1de5b20416669443.png";
@@ -251,11 +251,11 @@ http://127.0.0.1:3456/test-page
 });
 
 it("build cache expiration should prune images and metadata", async () => {
-    const buildCachePath = "./.buildCache-expire/rehype-og-card";
-    const serverCachePath = "./.cache-expire/rehype-og-card";
+    const buildCachePath = "./.cache/build-cache-expire/rehype-og-card";
+    const serverCachePath = "./.cache/server-cache-expire-build/rehype-og-card";
 
-    await fs.rm("./.buildCache-expire", { recursive: true, force: true });
-    await fs.rm("./.cache-expire", { recursive: true, force: true });
+    await fs.rm("./.cache/build-cache-expire", { recursive: true, force: true });
+    await fs.rm("./.cache/server-cache-expire-build", { recursive: true, force: true });
     await fs.mkdir(buildCachePath, { recursive: true });
 
     const cachedAt = Date.now() - 1000;
@@ -285,11 +285,11 @@ it("build cache expiration should prune images and metadata", async () => {
 });
 
 it("build cache expiration disabled should keep entries", async () => {
-    const buildCachePath = "./.buildCache-no-expire/rehype-og-card";
-    const serverCachePath = "./.cache-no-expire-build/rehype-og-card";
+    const buildCachePath = "./.cache/build-cache-no-expire/rehype-og-card";
+    const serverCachePath = "./.cache/server-cache-no-expire-build/rehype-og-card";
 
-    await fs.rm("./.buildCache-no-expire", { recursive: true, force: true });
-    await fs.rm("./.cache-no-expire-build", { recursive: true, force: true });
+    await fs.rm("./.cache/build-cache-no-expire", { recursive: true, force: true });
+    await fs.rm("./.cache/server-cache-no-expire-build", { recursive: true, force: true });
     await fs.mkdir(buildCachePath, { recursive: true });
 
     const cachedAt = Date.now() - 1000;
@@ -325,8 +325,8 @@ mailto:info@example.com
 });
 
 it("should work with `buildCache` option", async () => {
-    const serverCachePath = "./.cache/";
-    const buildCachePath = "./.buildCache/";
+    const serverCachePath = "./.cache/server-cache/";
+    const buildCachePath = "./.cache/build-cache/";
 
     await fs.rm(serverCachePath, { recursive: true, force: true });
     await fs.rm(buildCachePath, { recursive: true, force: true });
@@ -352,9 +352,9 @@ http://127.0.0.1:3456/test-page
 });
 
 it("restoreOGDataBuildCache should remove expired metadata", async () => {
-    const buildCachePath = "./.buildCache-expire-meta/rehype-og-card";
+    const buildCachePath = "./.cache/build-cache-expire-meta/rehype-og-card";
 
-    await fs.rm("./.buildCache-expire-meta", { recursive: true, force: true });
+    await fs.rm("./.cache/build-cache-expire-meta", { recursive: true, force: true });
     await fs.mkdir(buildCachePath, { recursive: true });
 
     const url = "https://example.com";

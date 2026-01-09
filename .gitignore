@@ -2,11 +2,3 @@ node_modules/
 dist/
 tsconfig.tsbuildinfo
 .cache/
-.buildCache/
-.cache-expire/
-.cache-expire-server/
-.cache-no-expire/
-.cache-no-expire-build/
-.buildCache-expire/
-.buildCache-expire-meta/
-.buildCache-no-expire/
