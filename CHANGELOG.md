@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.0.1
+
+### Patch Changes
+
+- [#374](https://github.com/Robot-Inventor/rehype-og-card/pull/374) [`71f1c05`](https://github.com/Robot-Inventor/rehype-og-card/commit/71f1c05a4a9108057c3e2c650bc9549fefab6d73) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump undici from 7.16.0 to 7.18.2
+
 ## 3.0.0
 
 ### Major Changes
