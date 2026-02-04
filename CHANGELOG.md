@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.0
+
+### Minor Changes
+
+- [#382](https://github.com/Robot-Inventor/rehype-og-card/pull/382) [`2edb906`](https://github.com/Robot-Inventor/rehype-og-card/commit/2edb9062cd9ef76f4f899b58b0e44ea90e0017c0) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add checks to ensure thumbnails and favicons are image files
+
 ## 3.0.1
 
 ### Patch Changes
