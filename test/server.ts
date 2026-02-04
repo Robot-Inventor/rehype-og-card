@@ -40,6 +40,25 @@ const NON_IMAGE_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
+const NON_FAVICON_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="Test Page Title">
+    <meta property="og:description" content="This is a test page description for OG card testing">
+    <meta property="og:image" content="http://127.0.0.1:3456/test-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Test image alt text">
+    <link rel="icon" href="/not-image">
+    <title>Test Page Title</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <p>This is a test page for rehype-og-card testing.</p>
+</body>
+</html>`;
+
 const SIMPLE_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,6 +103,10 @@ export const startTestServer = (): Promise<void> => {
                 case "/test-page-non-image":
                     res.writeHead(200, { "Content-Type": "text/html" });
                     res.end(NON_IMAGE_HTML);
+                    break;
+                case "/test-page-non-favicon":
+                    res.writeHead(200, { "Content-Type": "text/html" });
+                    res.end(NON_FAVICON_HTML);
                     break;
 
                 case "/simple-page":

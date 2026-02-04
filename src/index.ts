@@ -171,12 +171,13 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
 
                     if (filename) {
                         OGData.faviconURL = path.posix.join("/rehype-og-card", filename);
-                    }
-
-                    if (filename && mergedOptions.buildCache) {
-                        const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
-                        const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
-                        void saveBuildCacheFile(downloadedFilePath, buildCachePath);
+                        if (mergedOptions.buildCache) {
+                            const downloadedFilePath = path.join(mergedOptions.serverCachePath, filename);
+                            const buildCachePath = path.join(mergedOptions.buildCachePath, filename);
+                            void saveBuildCacheFile(downloadedFilePath, buildCachePath);
+                        }
+                    } else {
+                        delete OGData.faviconURL;
                     }
                 }
 

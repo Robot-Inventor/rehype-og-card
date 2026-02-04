@@ -220,6 +220,27 @@ http://127.0.0.1:3456/test-page-non-image
     expect(cache.length).toBe(2);
 });
 
+it("should omit favicon when response content type is not an image", async () => {
+    const serverCachePath = "./.cache/server-cache-non-favicon/";
+
+    await fs.rm(serverCachePath, { recursive: true, force: true });
+    const processor = processorFactory({ serverCache: true, serverCachePath });
+
+    const input = `
+http://127.0.0.1:3456/test-page-non-favicon
+    `.trim();
+
+    const expected = `
+<div class="og-card-container"><a href="http://127.0.0.1:3456/test-page-non-favicon"><div class="og-card-info"><div class="og-card-title">Test Page Title</div><div class="og-card-description">This is a test page description for OG card testing</div><div class="og-card-url-container"><span class="og-card-url">127.0.0.1</span></div></div><div class="og-card-image-container"><img class="og-card-image" alt="Test image alt text" decoding="async" height="630" loading="lazy" src="/rehype-og-card/191e9828b06abb9605450abfdb0555bca5fc3c5d73433e2c1de5b20416669443.png" width="1200"></div></a></div>
+    `.trim();
+
+    const result = await processor.process(input);
+    expect(result.toString().trim()).toBe(expected);
+
+    const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
+    expect(cache.length).toBe(2);
+});
+
 it("server cache expiration disabled should keep cached images", async () => {
     const serverCachePath = "./.cache/server-cache-no-expire/rehype-og-card";
 
