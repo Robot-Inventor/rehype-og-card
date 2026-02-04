@@ -21,6 +21,25 @@ const TEST_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
+const NON_IMAGE_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="Test Page Title">
+    <meta property="og:description" content="This is a test page description for OG card testing">
+    <meta property="og:image" content="http://127.0.0.1:3456/not-image">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Not an image">
+    <link rel="icon" href="/favicon.ico">
+    <title>Test Page Title</title>
+</head>
+<body>
+    <h1>Test Page</h1>
+    <p>This is a test page for rehype-og-card testing.</p>
+</body>
+</html>`;
+
 const SIMPLE_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,12 +78,18 @@ export const startTestServer = (): Promise<void> => {
             if (req.url === "/test-page") {
                 res.writeHead(200, { "Content-Type": "text/html" });
                 res.end(TEST_HTML);
+            } else if (req.url === "/test-page-non-image") {
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.end(NON_IMAGE_HTML);
             } else if (req.url === "/simple-page") {
                 res.writeHead(200, { "Content-Type": "text/html" });
                 res.end(SIMPLE_HTML);
             } else if (req.url === "/test-image.png") {
                 res.writeHead(200, { "Content-Type": "image/png" });
                 res.end(SIMPLE_PNG);
+            } else if (req.url === "/not-image") {
+                res.writeHead(200, { "Content-Type": "text/html" });
+                res.end("<!doctype html><p>not an image</p>");
             } else if (req.url === "/favicon.ico") {
                 res.writeHead(200, { "Content-Type": "image/png" });
                 res.end(SIMPLE_PNG);
