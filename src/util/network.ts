@@ -138,6 +138,8 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
             signal: AbortSignal.timeout(10 * 1000)
         });
 
+        if (!response.ok) return null;
+
         const contentType = response.headers.get("content-type");
         const normalizedContentType = contentType?.split(";")[0]?.trim().toLowerCase();
         if (!normalizedContentType?.startsWith("image/")) {

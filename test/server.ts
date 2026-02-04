@@ -75,27 +75,45 @@ export const startTestServer = (): Promise<void> => {
                 return;
             }
 
-            if (req.url === "/test-page") {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.end(TEST_HTML);
-            } else if (req.url === "/test-page-non-image") {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.end(NON_IMAGE_HTML);
-            } else if (req.url === "/simple-page") {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.end(SIMPLE_HTML);
-            } else if (req.url === "/test-image.png") {
-                res.writeHead(200, { "Content-Type": "image/png" });
-                res.end(SIMPLE_PNG);
-            } else if (req.url === "/not-image") {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.end("<!doctype html><p>not an image</p>");
-            } else if (req.url === "/favicon.ico") {
-                res.writeHead(200, { "Content-Type": "image/png" });
-                res.end(SIMPLE_PNG);
-            } else {
-                res.writeHead(404, { "Content-Type": "text/plain" });
-                res.end("Not Found");
+            switch (req.url) {
+                case "/test-page":
+                    res.writeHead(200, { "Content-Type": "text/html" });
+                    res.end(TEST_HTML);
+                    break;
+
+                case "/test-page-non-image":
+                    res.writeHead(200, { "Content-Type": "text/html" });
+                    res.end(NON_IMAGE_HTML);
+                    break;
+
+                case "/simple-page":
+                    res.writeHead(200, { "Content-Type": "text/html" });
+                    res.end(SIMPLE_HTML);
+                    break;
+
+                case "/test-image.png":
+                    res.writeHead(200, { "Content-Type": "image/png" });
+                    res.end(SIMPLE_PNG);
+                    break;
+
+                case "/not-image":
+                    res.writeHead(200, { "Content-Type": "text/html" });
+                    res.end("<!doctype html><p>not an image</p>");
+                    break;
+
+                case "/forbidden-image":
+                    res.writeHead(403, { "Content-Type": "text/plain" });
+                    res.end("Forbidden");
+                    break;
+
+                case "/favicon.ico":
+                    res.writeHead(200, { "Content-Type": "image/png" });
+                    res.end(SIMPLE_PNG);
+                    break;
+
+                default:
+                    res.writeHead(404, { "Content-Type": "text/plain" });
+                    res.end("Not Found");
             }
         });
 
