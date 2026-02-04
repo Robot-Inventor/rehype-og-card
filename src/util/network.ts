@@ -138,6 +138,16 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
             signal: AbortSignal.timeout(10 * 1000)
         });
 
+        if (!response.ok) return null;
+
+        const contentType = response.headers.get("content-type");
+        const normalizedContentType = contentType?.split(";")[0]?.trim().toLowerCase();
+        if (!normalizedContentType?.startsWith("image/")) {
+            // eslint-disable-next-line no-console
+            console.error("[rehype-og-card] Invalid image content type:", contentType ?? "unknown", "for", options.url);
+            return null;
+        }
+
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 

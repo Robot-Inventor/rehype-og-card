@@ -60,3 +60,17 @@ it("resolves root-relative og:image URLs against the page origin", async () => {
     vi.resetModules();
     vi.clearAllMocks();
 });
+
+it("returns null when image response is not ok", async () => {
+    vi.resetModules();
+    const { downloadImage } = await import("./network.js");
+
+    const result = await downloadImage({
+        cacheMaxAge: 1000,
+        directory: "./.cache/forbidden-image",
+        url: "http://127.0.0.1:3456/forbidden-image",
+        userAgent: "rehype-og-card-test"
+    });
+
+    expect(result).toBeNull();
+});

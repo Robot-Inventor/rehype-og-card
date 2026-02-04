@@ -66,14 +66,16 @@ const createOGCard = (
                 h("div.og-card-title", data.title),
                 data.description ? h("div.og-card-description", data.description) : null,
                 h("div.og-card-url-container", [
-                    h("img.og-card-favicon", {
-                        alt: "favicon",
-                        decoding: options.decoding,
-                        height: 16,
-                        loading: options.loading,
-                        src: data.faviconURL,
-                        width: 16
-                    }),
+                    data.faviconURL
+                        ? h("img.og-card-favicon", {
+                              alt: "favicon",
+                              decoding: options.decoding,
+                              height: 16,
+                              loading: options.loading,
+                              src: data.faviconURL,
+                              width: 16
+                          })
+                        : null,
                     h("span.og-card-url", data.displayURL)
                 ])
             ]),
