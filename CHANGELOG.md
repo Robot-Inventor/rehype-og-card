@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.1
+
+### Patch Changes
+
+- [#391](https://github.com/Robot-Inventor/rehype-og-card/pull/391) [`652218d`](https://github.com/Robot-Inventor/rehype-og-card/commit/652218ddf40f32f85607a2decd98eda639ef777a) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump minimatch
+
 ## 3.1.0
 
 ### Minor Changes
