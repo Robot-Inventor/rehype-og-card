@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 3.1.3
+
+### Patch Changes
+
+- [#398](https://github.com/Robot-Inventor/rehype-og-card/pull/398) [`e348023`](https://github.com/Robot-Inventor/rehype-og-card/commit/e3480230a9634552c755d7fd28a444ac96471eba) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update vulnerable dependencies
+
+- [#399](https://github.com/Robot-Inventor/rehype-og-card/pull/399) [`6a0959b`](https://github.com/Robot-Inventor/rehype-og-card/commit/6a0959bbafb51b573accc52ebc923f8447cbec2e) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update ArkType version in `package.json`
+
 ## 3.1.2
 
 ### Patch Changes
