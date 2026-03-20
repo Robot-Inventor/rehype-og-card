@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.4
+
+### Patch Changes
+
+- [#408](https://github.com/Robot-Inventor/rehype-og-card/pull/408) [`1f51930`](https://github.com/Robot-Inventor/rehype-og-card/commit/1f51930b8f17188121d09efb9f77b9e039448e44) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps-dev): bump flatted from 3.3.1 to 3.4.2
+
 ## 3.1.3
 
 ### Patch Changes
