@@ -81,7 +81,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
         const linkCardPromises: Array<Promise<void>> = [];
 
         // eslint-disable-next-line max-statements, max-lines-per-function
-        visitParents<Root, string[]>(tree, ["element", "text"], (node, ancestors): void => {
+        visitParents(tree, ["element", "text"], (node, ancestors): void => {
             let anchorNode: AnchorElement | null = null;
 
             const isBareLink = node.type === "text" && isValidURL(node.value.trim());
