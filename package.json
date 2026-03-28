@@ -51,7 +51,7 @@
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
-    "typescript": "^6.0.0",
+    "typescript": "^5.9.2",
     "unified": "^11.0.5",
     "vitest": "^4.0.0"
   },
@@ -63,5 +63,8 @@
     "node-fetch": "^3.3.2",
     "open-graph-scraper": "^6.6.3",
     "unist-util-visit-parents": "^6.0.1"
+  },
+  "overrides": {
+      "zod-validation-error": "^5.0.0"
   }
 }
