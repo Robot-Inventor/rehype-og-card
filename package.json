@@ -1,6 +1,6 @@
 {
   "name": "rehype-og-card",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "description": "Rehype plugin to convert text links to link cards",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -65,6 +65,6 @@
     "unist-util-visit-parents": "^6.0.1"
   },
   "overrides": {
-      "zod-validation-error": "^5.0.0"
+    "zod-validation-error": "^5.0.0"
   }
 }
