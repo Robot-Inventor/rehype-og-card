@@ -329,11 +329,11 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
  * @param maxAgeMs Cache expiration time in milliseconds.
  * @returns Restored OG data. If not found, returns `null`.
  */
-// eslint-disable-next-line max-statements
 const restoreOGDataBuildCache = async (
     url: string,
     buildCachePath: string,
     maxAgeMs: number | false
+    // eslint-disable-next-line max-statements
 ): Promise<OGCardData | null> => {
     const filename = generateFilename(url, false);
     const savePath = `${path.join(buildCachePath, filename)}.json`;

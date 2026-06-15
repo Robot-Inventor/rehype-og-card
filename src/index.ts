@@ -43,9 +43,9 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
  * @param options Plugin options.
  * @returns Transformer function.
  */
-// eslint-disable-next-line max-lines-per-function, max-statements
 const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     options?: RehypeOGCardOptions
+    // eslint-disable-next-line max-lines-per-function, max-statements
 ): Transformer<Root> => {
     const mergedOptions = {
         ...DEFAULT_OPTIONS,
