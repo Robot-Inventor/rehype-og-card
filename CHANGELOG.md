@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 3.1.8
+
+### Patch Changes
+
+- [#452](https://github.com/Robot-Inventor/rehype-og-card/pull/452) [`6be0176`](https://github.com/Robot-Inventor/rehype-og-card/commit/6be0176bbb6d7652623468a9db8d4eb2225d0f6c) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update vulnerable dependencies
+
+- [#451](https://github.com/Robot-Inventor/rehype-og-card/pull/451) [`0484064`](https://github.com/Robot-Inventor/rehype-og-card/commit/04840646ae33c6e084cf095149c68883ba8cddc1) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump undici from 7.24.6 to 7.28.0
+
 ## 3.1.7
 
 ### Patch Changes
