@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.10
+
+### Patch Changes
+
+- [#461](https://github.com/Robot-Inventor/rehype-og-card/pull/461) [`1920565`](https://github.com/Robot-Inventor/rehype-og-card/commit/1920565f7f5e4b209983d9a9814b5c6dba7ea258) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency arktype to v2.2.2
+
 ## 3.1.9
 
 ### Patch Changes
