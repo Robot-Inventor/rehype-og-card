@@ -62,7 +62,7 @@
     "hastscript": "^9.0.1",
     "node-fetch": "^3.3.2",
     "open-graph-scraper": "^6.12.0",
-    "unist-util-visit-parents": "^6.0.1"
+    "unist-util-visit-parents": "^6.0.2"
   },
   "overrides": {
     "zod-validation-error": "^5.0.0"
