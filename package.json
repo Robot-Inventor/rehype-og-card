@@ -61,7 +61,7 @@
     "hast-util-is-element": "^3.0.0",
     "hastscript": "^9.0.1",
     "node-fetch": "^3.3.2",
-    "open-graph-scraper": "^6.6.3",
+    "open-graph-scraper": "^6.12.0",
     "unist-util-visit-parents": "^6.0.1"
   },
   "overrides": {
