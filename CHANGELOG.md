@@ -1,5 +1,25 @@
 # rehype-og-card
 
+## 3.1.11
+
+### Patch Changes
+
+- [#466](https://github.com/Robot-Inventor/rehype-og-card/pull/466) [`8988a3e`](https://github.com/Robot-Inventor/rehype-og-card/commit/8988a3e3e74f40c4118c95b0a321353891a9887c) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update vulnerable dependencies
+
+- [#483](https://github.com/Robot-Inventor/rehype-og-card/pull/483) [`dccf198`](https://github.com/Robot-Inventor/rehype-og-card/commit/dccf198449694a319025d1feb585bc9d58c241a7) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency unist-util-visit-parents to ^6.0.2
+
+- [#476](https://github.com/Robot-Inventor/rehype-og-card/pull/476) [`6898f07`](https://github.com/Robot-Inventor/rehype-og-card/commit/6898f07f61cffe15187556324a1f5cf715d91222) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency rehype-stringify to ^10.0.1
+
+- [#480](https://github.com/Robot-Inventor/rehype-og-card/pull/480) [`b082ab6`](https://github.com/Robot-Inventor/rehype-og-card/commit/b082ab6f0e6eaf0db99f219db5b12034221bf0f1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency arktype to ^2.2.3
+
+- [#477](https://github.com/Robot-Inventor/rehype-og-card/pull/477) [`4979f63`](https://github.com/Robot-Inventor/rehype-og-card/commit/4979f6380bc5d5e2fb5b0053e70e86a567b401b4) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency remark-rehype to ^11.1.2
+
+- [#481](https://github.com/Robot-Inventor/rehype-og-card/pull/481) [`54c48ae`](https://github.com/Robot-Inventor/rehype-og-card/commit/54c48ae38dc8aa3eabb0abdb6e9c77e1a23db6b1) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency hastscript to ^9.0.1
+
+- [#482](https://github.com/Robot-Inventor/rehype-og-card/pull/482) [`857b530`](https://github.com/Robot-Inventor/rehype-og-card/commit/857b530b26e97236fee8b91a83668224a43b89df) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency open-graph-scraper to ^6.12.0
+
+- [#474](https://github.com/Robot-Inventor/rehype-og-card/pull/474) [`271eb28`](https://github.com/Robot-Inventor/rehype-og-card/commit/271eb28f116a17c93e49fc715185e4694d7a9799) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency hast-util-to-html to ^9.0.5
+
 ## 3.1.10
 
 ### Patch Changes
