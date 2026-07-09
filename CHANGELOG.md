@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.12
+
+### Patch Changes
+
+- [#488](https://github.com/Robot-Inventor/rehype-og-card/pull/488) [`9377cda`](https://github.com/Robot-Inventor/rehype-og-card/commit/9377cdaba4130cd9569d234cb5c9014df1ca0be7) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - refactor: use dot notation for property access
+
 ## 3.1.11
 
 ### Patch Changes
