@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.14
+
+### Patch Changes
+
+- [#507](https://github.com/Robot-Inventor/rehype-og-card/pull/507) [`cc2c41f`](https://github.com/Robot-Inventor/rehype-og-card/commit/cc2c41f3441bc57e93827368ca1ed8bf8f4acec1) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: update vulnerable dependencies
+
 ## 3.1.13
 
 ### Patch Changes
