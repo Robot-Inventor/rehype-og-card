@@ -41,7 +41,7 @@
   "homepage": "https://github.com/Robot-Inventor/rehype-og-card#readme",
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.0",
-    "@changesets/cli": "^3.0.0",
+    "@changesets/cli": "^3.0.1",
     "@robot-inventor/eslint-config": "^13.0.3",
     "@robot-inventor/tsconfig-base": "^7.1.0",
     "@types/node": "^25.9.5",
