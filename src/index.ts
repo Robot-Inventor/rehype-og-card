@@ -15,9 +15,9 @@ import { isElement } from "hast-util-is-element";
 import path from "path";
 import { visitParents } from "unist-util-visit-parents";
 
-// eslint-disable-next-line no-magic-numbers
+// oxlint-disable-next-line no-magic-numbers
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-// eslint-disable-next-line no-magic-numbers
+// oxlint-disable-next-line no-magic-numbers
 const DEFAULT_CACHE_MAX_AGE_MS = 30 * ONE_DAY_MS;
 
 const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
@@ -43,9 +43,9 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
  * @param options Plugin options.
  * @returns Transformer function.
  */
+// oxlint-disable-next-line max-statements max-lines-per-function
 const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     options?: RehypeOGCardOptions
-    // eslint-disable-next-line max-lines-per-function, max-statements
 ): Transformer<Root> => {
     const mergedOptions = {
         ...DEFAULT_OPTIONS,
@@ -76,11 +76,11 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
      * Transform function to create OG card from bare links.
      * @param tree Root node of the HAST tree.
      */
-    // eslint-disable-next-line max-lines-per-function
+    // oxlint-disable-next-line max-lines-per-function
     const transform: Transformer<Root> = async (tree) => {
         const linkCardPromises: Array<Promise<void>> = [];
 
-        // eslint-disable-next-line max-statements, max-lines-per-function
+        // oxlint-disable-next-line max-statements, max-lines-per-function
         visitParents(tree, ["element", "text"], (node, ancestors): void => {
             let anchorNode: AnchorElement | null = null;
 
@@ -91,7 +91,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 anchorNode = convertTextToAnchorElement(node);
             } else if (mergedOptions.enableSameTextURLConversion && isValidAnchor) {
                 const isSameTextURL =
-                    // eslint-disable-next-line no-magic-numbers
+                    // oxlint-disable-next-line no-magic-numbers
                     node.children.length === 1 &&
                     node.children[0] &&
                     isTextNode(node.children[0]) &&
@@ -104,7 +104,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 return;
             }
 
-            // eslint-disable-next-line no-magic-numbers
+            // oxlint-disable-next-line no-magic-numbers
             const parent = ancestors[ancestors.length - 1];
             if (!parent) return;
 
@@ -115,14 +115,14 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             );
             if (shouldSkip) return;
 
-            // eslint-disable-next-line no-magic-numbers
+            // oxlint-disable-next-line no-magic-numbers
             const isTheOnlyChild = parent.children.length === 1;
             if (!isTheOnlyChild) return;
 
             const targetURL = new URL(anchorNode.properties.href);
             if (mergedOptions.excludeDomains.includes(targetURL.hostname)) return;
 
-            // eslint-disable-next-line jsdoc/require-jsdoc, max-statements, max-lines-per-function
+            // oxlint-disable-next-line max-statements max-lines-per-function jsdoc-js/require-jsdoc
             const linkCardPromise = async (): Promise<void> => {
                 let OGData = mergedOptions.buildCache
                     ? await restoreOGDataBuildCache(
@@ -189,16 +189,16 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 const OGCard = createOGCard(OGData, mergedOptions);
 
                 const { removeParentPTag: shouldRemoveParentPTag } = mergedOptions;
-                // eslint-disable-next-line no-magic-numbers
+                // oxlint-disable-next-line no-magic-numbers
                 const replacementContainer = shouldRemoveParentPTag ? ancestors[ancestors.length - 2] : parent;
                 const replacementTarget = shouldRemoveParentPTag ? parent : node;
 
                 if (!replacementContainer || !("children" in replacementContainer)) return;
 
                 const index = replacementContainer.children.indexOf(replacementTarget);
-                // eslint-disable-next-line no-magic-numbers
+                // oxlint-disable-next-line no-magic-numbers
                 if (index === -1) return;
-                // eslint-disable-next-line no-magic-numbers
+                // oxlint-disable-next-line no-magic-numbers
                 replacementContainer.children.splice(index, 1, OGCard);
             };
             linkCardPromises.push(linkCardPromise());

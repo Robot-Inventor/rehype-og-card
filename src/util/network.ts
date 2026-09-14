@@ -25,11 +25,11 @@ const isValidURL = (url: string): boolean => {
  * @returns Resolved absolute URL or `undefined` if the raw URL is invalid.
  */
 const resolveAbsoluteURL = (rawURL: string | undefined, baseURL: string): string | undefined => {
-    // eslint-disable-next-line no-undefined
+    // oxlint-disable-next-line no-undefined
     if (!rawURL) return undefined;
 
     const parsedUrl = URL.parse(rawURL, baseURL);
-    // eslint-disable-next-line no-undefined
+    // oxlint-disable-next-line no-undefined
     return parsedUrl ? parsedUrl.href : undefined;
 };
 
@@ -61,12 +61,12 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             description: result.ogDescription,
             displayURL: url,
             faviconURL,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            // oxlint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             title: result.ogTitle || url,
             url
         };
     } catch (error) {
-        // eslint-disable-next-line no-console
+        // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Error fetching OG data:", error);
         return null;
     }
@@ -97,10 +97,10 @@ interface DownloadImageOptions {
  * @param options Options to download image.
  * @returns Filename of the downloaded image.
  */
-// eslint-disable-next-line max-statements, max-lines-per-function
+// oxlint-disable-next-line max-statements, max-lines-per-function
 const downloadImage = async (options: DownloadImageOptions): Promise<string | null> => {
     if (!isValidURL(options.url)) {
-        // eslint-disable-next-line no-console
+        // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Invalid thumbnail URL:", options.url);
         return null;
     }
@@ -122,7 +122,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
             if (typeof cachedAt === "number" && !isCacheExpired(cachedAt, maxAge)) return filename;
 
             if (typeof entry !== "undefined") {
-                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                // oxlint-disable-next-line @typescript-eslint/no-dynamic-delete
                 delete index[filename];
                 await writeCacheIndex(options.directory, index);
             }
@@ -134,7 +134,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
             headers: {
                 "user-agent": options.userAgent
             },
-            // eslint-disable-next-line no-magic-numbers
+            // oxlint-disable-next-line no-magic-numbers
             signal: AbortSignal.timeout(10 * 1000)
         });
 
@@ -143,7 +143,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         const contentType = response.headers.get("content-type");
         const normalizedContentType = contentType?.split(";")[0]?.trim().toLowerCase();
         if (!normalizedContentType?.startsWith("image/")) {
-            // eslint-disable-next-line no-console
+            // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Invalid image content type:", contentType ?? "unknown", "for", options.url);
             return null;
         }
@@ -164,7 +164,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
 
         return filename;
     } catch (error) {
-        // eslint-disable-next-line no-console
+        // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Error downloading image:", error);
         return null;
     }

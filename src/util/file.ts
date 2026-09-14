@@ -36,7 +36,7 @@ const checkFileExistsSync = (filePath: string): boolean => {
 const createDirectorySync = (dir: string): void => {
     fs.mkdir(dir, { recursive: true }, (error) => {
         if (error) {
-            // eslint-disable-next-line no-console
+            // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Failed to copy files: ", error);
         }
     });
@@ -58,7 +58,7 @@ const copyDirectory = (source: string, destination: string): void => {
 
     fs.cp(source, destination, { recursive: true }, (error) => {
         if (error) {
-            // eslint-disable-next-line no-console
+            // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Failed to copy files: ", error);
         }
     });
