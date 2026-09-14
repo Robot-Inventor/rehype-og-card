@@ -82,7 +82,7 @@ const createOGCard = (
             data.OGImageURL
                 ? h("div.og-card-image-container", [
                       h("img.og-card-image", {
-                          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                          // oxlint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                           alt: data.OGImageAlt || data.OGImageURL,
                           decoding: options.decoding,
                           height: data.OGImageHeight,

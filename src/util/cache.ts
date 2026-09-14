@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* oxlint-disable max-lines */
 import { type CacheIndex, type OGCardData, cacheIndexSchema } from "../types.js";
 import { checkFileExists, generateFilename } from "./file.js";
 import fs from "fs/promises";
@@ -39,10 +39,10 @@ const getCacheIndexLockPath = (directory: string): string => path.join(directory
  * @param ms Duration in milliseconds.
  */
 const sleepSync = (ms: number): void => {
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     const buffer = new SharedArrayBuffer(4);
     const view = new Int32Array(buffer);
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     Atomics.wait(view, 0, 0, ms);
 };
 
@@ -205,7 +205,7 @@ const removeCacheEntrySync = (directory: string, filename: string): void => {
  * @param directory Cache directory path.
  * @param maxAgeMs Cache expiration time in milliseconds.
  */
-// eslint-disable-next-line max-statements, max-lines-per-function
+// oxlint-disable-next-line max-statements, max-lines-per-function
 const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false): void => {
     if (maxAgeMs === false) return;
     if (!fsSync.existsSync(directory)) return;
@@ -218,11 +218,11 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
         const entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) {
             pruneExpiredCacheFilesSync(entryPath, maxAgeMs);
-            // eslint-disable-next-line no-continue
+            // oxlint-disable-next-line no-continue
             continue;
         }
 
-        // eslint-disable-next-line no-continue
+        // oxlint-disable-next-line no-continue
         if (entry.name === CACHE_INDEX_FILENAME || entry.name === CACHE_INDEX_LOCK_FILENAME) continue;
 
         if (entry.name.endsWith(".json")) {
@@ -232,7 +232,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
 
                 if (typeof data.cachedAt !== "number") {
                     fsSync.rmSync(entryPath, { force: true });
-                    // eslint-disable-next-line no-continue
+                    // oxlint-disable-next-line no-continue
                     continue;
                 }
 
@@ -243,7 +243,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
                 fsSync.rmSync(entryPath, { force: true });
             }
 
-            // eslint-disable-next-line no-continue
+            // oxlint-disable-next-line no-continue
             continue;
         }
 
@@ -251,7 +251,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
         if (typeof cachedAtMs !== "number" || isCacheExpired(cachedAtMs, maxAgeMs)) {
             removeCacheEntrySync(directory, entry.name);
             indexUpdated = true;
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            // oxlint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete index[entry.name];
         }
     }
@@ -266,7 +266,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
  * @param serverCachePath Server cache path.
  * @param buildCachePath Build cache path.
  */
-// eslint-disable-next-line max-statements
+// oxlint-disable-next-line max-statements
 const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
     const serverCacheExists = await checkFileExists(serverCachePath);
     const buildCacheExists = await checkFileExists(buildCachePath);
@@ -329,11 +329,11 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
  * @param maxAgeMs Cache expiration time in milliseconds.
  * @returns Restored OG data. If not found, returns `null`.
  */
+// oxlint-disable-next-line max-statements
 const restoreOGDataBuildCache = async (
     url: string,
     buildCachePath: string,
     maxAgeMs: number | false
-    // eslint-disable-next-line max-statements
 ): Promise<OGCardData | null> => {
     const filename = generateFilename(url, false);
     const savePath = `${path.join(buildCachePath, filename)}.json`;
@@ -343,7 +343,6 @@ const restoreOGDataBuildCache = async (
         const parsed = JSON.parse(data) as OGCardData & { cachedAt?: number };
         if (typeof parsed.cachedAt !== "number") {
             if (maxAgeMs === false) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { cachedAt: __, ...rest } = parsed;
                 return rest;
             }
@@ -356,7 +355,6 @@ const restoreOGDataBuildCache = async (
             return null;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { cachedAt: __, ...rest } = parsed;
         return rest;
     } catch {

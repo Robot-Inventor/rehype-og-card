@@ -12,11 +12,11 @@
     "provenance": true
   },
   "scripts": {
-    "test": "npx vitest",
-    "lint": "npx eslint ./src/**/*.ts",
-    "format": "npx prettier --write ./src/**/*",
-    "format:check": "npx prettier --check ./src/**/*",
-    "build": "npx tsc",
+    "test": "vitest",
+    "lint": "oxlint ./src",
+    "format": "prettier --write ./src/**/*",
+    "format:check": "prettier --check ./src/**/*",
+    "build": "tsc",
     "version": "npm run build && git add .",
     "ci:version": "changeset version && npm run version",
     "ci:publish": "npm run build && changeset publish"
@@ -42,11 +42,11 @@
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
-    "@robot-inventor/eslint-config": "^13.1.1",
+    "@robot-inventor/oxlint-config": "^0.2.0",
     "@robot-inventor/tsconfig-base": "^7.2.0",
     "@types/node": "^25.9.6",
-    "eslint": "^10.10.0",
     "hast-util-to-html": "^9.0.5",
+    "oxlint": "^1.83.0",
     "prettier": "^3.9.6",
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
@@ -63,8 +63,5 @@
     "node-fetch": "^3.3.2",
     "open-graph-scraper": "^6.12.0",
     "unist-util-visit-parents": "^6.0.2"
-  },
-  "overrides": {
-    "zod-validation-error": "^5.0.0"
   }
 }
