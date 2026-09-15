@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.15
+
+### Patch Changes
+
+- [#529](https://github.com/Robot-Inventor/rehype-og-card/pull/529) [`2b61d39`](https://github.com/Robot-Inventor/rehype-og-card/commit/2b61d3969fbaba97e668a33fb665631c3a0f720a) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - perf: improve cache validation
+
 ## 3.1.14
 
 ### Patch Changes
