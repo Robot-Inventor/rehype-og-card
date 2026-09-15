@@ -93,12 +93,12 @@ interface OGCardData {
     OGImageHeight?: number | undefined;
 }
 
-const cacheIndexSchema = type({
+const parseCacheIndex = type("string.json.parse").to({
     "[string]": {
         createdAt: "number"
     }
 });
 
-type CacheIndex = typeof cacheIndexSchema.infer;
+type CacheIndex = typeof parseCacheIndex.infer;
 
-export { cacheIndexSchema, type RehypeOGCardOptions, type OGCardData, type CacheIndex };
+export { parseCacheIndex, type RehypeOGCardOptions, type OGCardData, type CacheIndex };

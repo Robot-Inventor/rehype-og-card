@@ -1,5 +1,5 @@
 /* oxlint-disable max-lines */
-import { type CacheIndex, type OGCardData, cacheIndexSchema } from "../types.js";
+import { type CacheIndex, type OGCardData, parseCacheIndex } from "../types.js";
 import { checkFileExists, generateFilename } from "./file.js";
 import fs from "fs/promises";
 import fsSync from "fs";
@@ -127,8 +127,7 @@ const readCacheIndexSync = (directory: string): CacheIndex => {
     const indexPath = getCacheIndexPath(directory);
     try {
         const raw = fsSync.readFileSync(indexPath, "utf-8");
-        const parsed: unknown = JSON.parse(raw);
-        const validated = cacheIndexSchema(parsed);
+        const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
         return validated;
     } catch {
@@ -164,8 +163,7 @@ const readCacheIndex = async (directory: string): Promise<CacheIndex> => {
     if (!exists) return {};
     try {
         const raw = await fs.readFile(indexPath, "utf-8");
-        const parsed: unknown = JSON.parse(raw);
-        const validated = cacheIndexSchema(parsed);
+        const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
         return validated;
     } catch {
