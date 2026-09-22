@@ -203,7 +203,7 @@ const removeCacheEntrySync = (directory: string, filename: string): void => {
  * @param directory Cache directory path.
  * @param maxAgeMs Cache expiration time in milliseconds.
  */
-// oxlint-disable-next-line max-statements, max-lines-per-function
+// oxlint-disable-next-line max-statements
 const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false): void => {
     if (maxAgeMs === false) return;
     if (!fsSync.existsSync(directory)) return;
@@ -264,7 +264,6 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
  * @param serverCachePath Server cache path.
  * @param buildCachePath Build cache path.
  */
-// oxlint-disable-next-line max-statements
 const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
     const serverCacheExists = await checkFileExists(serverCachePath);
     const buildCacheExists = await checkFileExists(buildCachePath);
@@ -327,7 +326,6 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
  * @param maxAgeMs Cache expiration time in milliseconds.
  * @returns Restored OG data. If not found, returns `null`.
  */
-// oxlint-disable-next-line max-statements
 const restoreOGDataBuildCache = async (
     url: string,
     buildCachePath: string,
