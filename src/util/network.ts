@@ -97,7 +97,7 @@ interface DownloadImageOptions {
  * @param options Options to download image.
  * @returns Filename of the downloaded image.
  */
-// oxlint-disable-next-line max-statements, max-lines-per-function
+// oxlint-disable-next-line max-statements
 const downloadImage = async (options: DownloadImageOptions): Promise<string | null> => {
     if (!isValidURL(options.url)) {
         // oxlint-disable-next-line no-console

@@ -43,7 +43,7 @@ const DEFAULT_OPTIONS: Required<RehypeOGCardOptions> = {
  * @param options Plugin options.
  * @returns Transformer function.
  */
-// oxlint-disable-next-line max-statements max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function
 const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     options?: RehypeOGCardOptions
 ): Transformer<Root> => {
@@ -80,7 +80,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
     const transform: Transformer<Root> = async (tree) => {
         const linkCardPromises: Array<Promise<void>> = [];
 
-        // oxlint-disable-next-line max-statements, max-lines-per-function
+        // oxlint-disable-next-line max-lines-per-function
         visitParents(tree, ["element", "text"], (node, ancestors): void => {
             let anchorNode: AnchorElement | null = null;
 
@@ -122,7 +122,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             const targetURL = new URL(anchorNode.properties.href);
             if (mergedOptions.excludeDomains.includes(targetURL.hostname)) return;
 
-            // oxlint-disable-next-line max-statements max-lines-per-function jsdoc-js/require-jsdoc
+            // oxlint-disable-next-line max-statements jsdoc-js/require-jsdoc
             const linkCardPromise = async (): Promise<void> => {
                 let OGData = mergedOptions.buildCache
                     ? await restoreOGDataBuildCache(
