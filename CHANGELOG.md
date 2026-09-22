@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 3.1.16
+
+### Patch Changes
+
+- [#538](https://github.com/Robot-Inventor/rehype-og-card/pull/538) [`7226c1a`](https://github.com/Robot-Inventor/rehype-og-card/commit/7226c1a06bba7191444b86915ccee940a935e7a3) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - chore: remove unused oxlint-disable comments
+
 ## 3.1.15
 
 ### Patch Changes
