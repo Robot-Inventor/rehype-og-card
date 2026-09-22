@@ -46,7 +46,7 @@
     "@robot-inventor/tsconfig-base": "^7.2.0",
     "@types/node": "^26.6.2",
     "hast-util-to-html": "^9.0.5",
-    "oxlint": "^1.83.0",
+    "oxlint": "^1.85.0",
     "prettier": "^3.9.8",
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
