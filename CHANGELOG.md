@@ -1,5 +1,19 @@
 # rehype-og-card
 
+## 4.0.0
+
+### Major Changes
+
+- [#562](https://github.com/Robot-Inventor/rehype-og-card/pull/562) [`62fdfa6`](https://github.com/Robot-Inventor/rehype-og-card/commit/62fdfa6977f3c8c5b29fb6ee44608a3eeef6a71f) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - feat: add `svgHandling` option
+
+    For security reasons, rehype-og-card now rasterizes SVG images. While you can restore the previous behavior by setting `svgHandling: "preserve"`, this is not recommended. If you are using server-side caching for `rehype-og-card`, it is recommended that you clear the cache after updating to this version.
+
+### Patch Changes
+
+- [#542](https://github.com/Robot-Inventor/rehype-og-card/pull/542) [`5ecbd07`](https://github.com/Robot-Inventor/rehype-og-card/commit/5ecbd0702c993d4a8d959674bcac33eedaa9f664) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency arktype to ^2.2.8
+
+- [#561](https://github.com/Robot-Inventor/rehype-og-card/pull/561) [`6385ee0`](https://github.com/Robot-Inventor/rehype-og-card/commit/6385ee0ad9b4bcccf84a788cb1e37db28440f92b) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency arktype to ^2.2.9
+
 ## 3.1.16
 
 ### Patch Changes
