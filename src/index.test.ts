@@ -8,9 +8,9 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
-import fs from "fs/promises";
-import path from "path";
-import { setTimeout } from "timers/promises";
+import { readdir, rm, stat, mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { setTimeout } from "node:timers/promises";
 
 const processorFactory = (options?: RehypeOGCardOptions) => {
     return unified().use(remarkParse).use(remarkRehype).use(rehypeOGCard, options).use(rehypeStringify);
@@ -180,7 +180,7 @@ http://127.0.0.1:3456/test-page
 it("server cache should work", async () => {
     const serverCachePath = "./.cache/server-cache/";
 
-    await fs.rm(serverCachePath, { recursive: true, force: true });
+    await rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath });
 
     const input = `
@@ -195,14 +195,14 @@ http://127.0.0.1:3456/test-page
     expect(result.toString().trim()).toBe(expected);
 
     // The cache contains: 1 OG image file + 1 favicon file + 1 cache index file
-    const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
+    const cache = await readdir(join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(3);
 });
 
 it("should omit OG images when response content type is not an image", async () => {
     const serverCachePath = "./.cache/server-cache-non-image/";
 
-    await fs.rm(serverCachePath, { recursive: true, force: true });
+    await rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath });
 
     const input = `
@@ -216,14 +216,14 @@ http://127.0.0.1:3456/test-page-non-image
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
-    const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
+    const cache = await readdir(join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(2);
 });
 
 it("should omit favicon when response content type is not an image", async () => {
     const serverCachePath = "./.cache/server-cache-non-favicon/";
 
-    await fs.rm(serverCachePath, { recursive: true, force: true });
+    await rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath });
 
     const input = `
@@ -237,47 +237,51 @@ http://127.0.0.1:3456/test-page-non-favicon
     const result = await processor.process(input);
     expect(result.toString().trim()).toBe(expected);
 
-    const cache = await fs.readdir(path.join(serverCachePath, "rehype-og-card"));
+    const cache = await readdir(join(serverCachePath, "rehype-og-card"));
     expect(cache.length).toBe(2);
 });
 
-it("server cache expiration disabled should keep cached images", async () => {
-    const serverCachePath = "./.cache/server-cache-no-expire/rehype-og-card";
+it.each(["omit", "preserve", "rasterize"] as const)(
+    "reuses legacy cached images without expiration in %s mode",
+    async (svgHandling) => {
+        const serverCachePath = "./.cache/server-cache-no-expire/rehype-og-card";
 
-    await fs.rm("./.cache/server-cache-no-expire", { recursive: true, force: true });
-    await fs.mkdir(serverCachePath, { recursive: true });
+        await rm("./.cache/server-cache-no-expire", { recursive: true, force: true });
+        await mkdir(serverCachePath, { recursive: true });
 
-    const url = "https://example.com/image.png";
-    const filename = generateFilename(url);
-    const filePath = path.join(serverCachePath, filename);
-    await fs.writeFile(filePath, "image");
+        const url = "https://example.com/image.png";
+        const filename = generateFilename(url);
+        const filePath = join(serverCachePath, filename);
+        await writeFile(filePath, "image");
 
-    const cacheIndex = { [filename]: { createdAt: Date.now() - 1000 } } as const satisfies CacheIndex;
-    await writeCacheIndex(serverCachePath, cacheIndex);
+        const cacheIndex = { [filename]: { createdAt: Date.now() - 1000 } } as const satisfies CacheIndex;
+        await writeCacheIndex(serverCachePath, cacheIndex);
 
-    const statBefore = await fs.stat(filePath);
-    const restored = await downloadImage({
-        cacheMaxAge: false,
-        directory: serverCachePath,
-        url,
-        userAgent: "rehype-og-card-test"
-    });
-    expect(restored).toBe(filename);
+        const statBefore = await stat(filePath);
+        const restored = await downloadImage({
+            cacheMaxAge: false,
+            directory: serverCachePath,
+            svgHandling,
+            url,
+            userAgent: "rehype-og-card-test"
+        });
+        expect(restored).toBe(filename);
 
-    const statAfter = await fs.stat(filePath);
-    expect(statAfter.mtimeMs).toBe(statBefore.mtimeMs);
+        const statAfter = await stat(filePath);
+        expect(statAfter.mtimeMs).toBe(statBefore.mtimeMs);
 
-    const indexAfter = await readCacheIndex(serverCachePath);
-    expect(indexAfter).toEqual(cacheIndex);
-});
+        const indexAfter = await readCacheIndex(serverCachePath);
+        expect(indexAfter).toEqual(cacheIndex);
+    }
+);
 
 it("server cache should expire images and re-download", async () => {
     const serverCachePath = "./.cache/server-cache-expire/";
-    const cacheDirectory = path.join(serverCachePath, "rehype-og-card");
+    const cacheDirectory = join(serverCachePath, "rehype-og-card");
     // This is the SHA-256 hash of "http://127.0.0.1:3456/test-image.png"
     const imageFilename = "191e9828b06abb9605450abfdb0555bca5fc3c5d73433e2c1de5b20416669443.png";
 
-    await fs.rm(serverCachePath, { recursive: true, force: true });
+    await rm(serverCachePath, { recursive: true, force: true });
     const processor = processorFactory({ serverCache: true, serverCachePath, serverCacheMaxAge: 100 });
 
     const input = `
@@ -290,8 +294,8 @@ http://127.0.0.1:3456/test-page
     const createdAtBefore = indexBefore[imageFilename]?.createdAt;
     expect(typeof createdAtBefore).toBe("number");
 
-    const imagePath = path.join(cacheDirectory, imageFilename);
-    const statBefore = await fs.stat(imagePath);
+    const imagePath = join(cacheDirectory, imageFilename);
+    const statBefore = await stat(imagePath);
 
     indexBefore[imageFilename] = { createdAt: Date.now() - 1000 };
     await writeCacheIndex(cacheDirectory, indexBefore);
@@ -303,7 +307,7 @@ http://127.0.0.1:3456/test-page
     expect(typeof createdAtAfter).toBe("number");
     expect(createdAtAfter).toBeGreaterThan(createdAtBefore as number);
 
-    const statAfter = await fs.stat(imagePath);
+    const statAfter = await stat(imagePath);
     expect(statAfter.mtimeMs).toBeGreaterThan(statBefore.mtimeMs);
 });
 
@@ -311,12 +315,12 @@ it("build cache expiration should prune images and metadata", async () => {
     const buildCachePath = "./.cache/build-cache-expire/rehype-og-card";
     const serverCachePath = "./.cache/server-cache-expire-build/rehype-og-card";
 
-    await fs.rm("./.cache/build-cache-expire", { recursive: true, force: true });
-    await fs.rm("./.cache/server-cache-expire-build", { recursive: true, force: true });
-    await fs.mkdir(buildCachePath, { recursive: true });
+    await rm("./.cache/build-cache-expire", { recursive: true, force: true });
+    await rm("./.cache/server-cache-expire-build", { recursive: true, force: true });
+    await mkdir(buildCachePath, { recursive: true });
 
     const cachedAt = Date.now() - 1000;
-    await fs.writeFile(path.join(buildCachePath, "image.png"), "image");
+    await writeFile(join(buildCachePath, "image.png"), "image");
     const cacheIndex = { "image.png": { createdAt: cachedAt } } as const satisfies CacheIndex;
     await writeCacheIndex(buildCachePath, cacheIndex);
     const ogUrl = "https://example.com";
@@ -327,14 +331,14 @@ it("build cache expiration should prune images and metadata", async () => {
         title: "Example Domain",
         url: ogUrl
     } as const satisfies OGCardData & { cachedAt: number };
-    await fs.writeFile(path.join(buildCachePath, ogFilename), JSON.stringify(ogPayload));
+    await writeFile(join(buildCachePath, ogFilename), JSON.stringify(ogPayload));
 
     restoreBuildCache(buildCachePath, serverCachePath, 1);
 
-    const buildCacheEntries = (await fs.readdir(buildCachePath)).sort();
+    const buildCacheEntries = (await readdir(buildCachePath)).sort();
     expect(buildCacheEntries).toEqual(["cache.json"]);
 
-    const serverCacheEntries = (await fs.readdir(serverCachePath)).sort();
+    const serverCacheEntries = (await readdir(serverCachePath)).sort();
     expect(serverCacheEntries).toEqual(["cache.json"]);
 
     const cacheIndexAfterPrune = await readCacheIndex(buildCachePath);
@@ -345,21 +349,21 @@ it("build cache expiration disabled should keep entries", async () => {
     const buildCachePath = "./.cache/build-cache-no-expire/rehype-og-card";
     const serverCachePath = "./.cache/server-cache-no-expire-build/rehype-og-card";
 
-    await fs.rm("./.cache/build-cache-no-expire", { recursive: true, force: true });
-    await fs.rm("./.cache/server-cache-no-expire-build", { recursive: true, force: true });
-    await fs.mkdir(buildCachePath, { recursive: true });
+    await rm("./.cache/build-cache-no-expire", { recursive: true, force: true });
+    await rm("./.cache/server-cache-no-expire-build", { recursive: true, force: true });
+    await mkdir(buildCachePath, { recursive: true });
 
     const cachedAt = Date.now() - 1000;
-    await fs.writeFile(path.join(buildCachePath, "image.png"), "image");
+    await writeFile(join(buildCachePath, "image.png"), "image");
     const cacheIndex = { "image.png": { createdAt: cachedAt } } as const satisfies CacheIndex;
     await writeCacheIndex(buildCachePath, cacheIndex);
 
     restoreBuildCache(buildCachePath, serverCachePath, false);
 
-    const buildCacheEntries = (await fs.readdir(buildCachePath)).sort();
+    const buildCacheEntries = (await readdir(buildCachePath)).sort();
     expect(buildCacheEntries).toEqual(["cache.json", "image.png"]);
 
-    const serverCacheEntries = (await fs.readdir(serverCachePath)).sort();
+    const serverCacheEntries = (await readdir(serverCachePath)).sort();
     expect(serverCacheEntries).toEqual(["cache.json", "image.png"]);
 
     const cacheIndexAfterRestore = await readCacheIndex(buildCachePath);
@@ -385,8 +389,8 @@ it("should work with `buildCache` option", async () => {
     const serverCachePath = "./.cache/server-cache/";
     const buildCachePath = "./.cache/build-cache/";
 
-    await fs.rm(serverCachePath, { recursive: true, force: true });
-    await fs.rm(buildCachePath, { recursive: true, force: true });
+    await rm(serverCachePath, { recursive: true, force: true });
+    await rm(buildCachePath, { recursive: true, force: true });
     const processor = processorFactory({ buildCache: true, buildCachePath, serverCachePath });
 
     const input = `
@@ -404,26 +408,26 @@ http://127.0.0.1:3456/test-page
     await setTimeout(1000);
 
     // The cache contains: 1 OG image file + 1 favicon file + 1 OG metadata JSON file + 1 cache index file
-    const cache = await fs.readdir(path.join(buildCachePath, "rehype-og-card"));
+    const cache = await readdir(join(buildCachePath, "rehype-og-card"));
     expect(cache.length).toBe(4);
 });
 
 it("restoreOGDataBuildCache should remove expired metadata", async () => {
     const buildCachePath = "./.cache/build-cache-expire-meta/rehype-og-card";
 
-    await fs.rm("./.cache/build-cache-expire-meta", { recursive: true, force: true });
-    await fs.mkdir(buildCachePath, { recursive: true });
+    await rm("./.cache/build-cache-expire-meta", { recursive: true, force: true });
+    await mkdir(buildCachePath, { recursive: true });
 
     const url = "https://example.com";
     const filename = generateFilename(url, false);
-    const savePath = path.join(buildCachePath, `${filename}.json`);
+    const savePath = join(buildCachePath, `${filename}.json`);
     const expiredPayload = {
         cachedAt: Date.now() - 1000,
         displayURL: "example.com",
         title: "Example Domain",
         url
     } as const satisfies OGCardData & { cachedAt: number };
-    await fs.writeFile(savePath, JSON.stringify(expiredPayload));
+    await writeFile(savePath, JSON.stringify(expiredPayload));
 
     const restored = await restoreOGDataBuildCache(url, buildCachePath, 1);
     expect(restored).toBeNull();

@@ -1,6 +1,7 @@
-import { createHash } from "crypto";
-import fs from "fs";
-import path from "path";
+import { cp, existsSync, mkdirSync } from "node:fs";
+import { access } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import path from "node:path";
 
 /**
  * Check if the file exists.
@@ -9,7 +10,7 @@ import path from "path";
  */
 const checkFileExists = async (filePath: string): Promise<boolean> => {
     try {
-        await fs.promises.access(filePath);
+        await access(filePath);
         return true;
     } catch {
         return false;
@@ -17,29 +18,11 @@ const checkFileExists = async (filePath: string): Promise<boolean> => {
 };
 
 /**
- * Check if the file exists.
- * @param filePath Path to check.
- * @returns `true` if the file exists, `false` otherwise.
- */
-const checkFileExistsSync = (filePath: string): boolean => {
-    let result = false;
-    fs.access(filePath, (error) => {
-        result = !error;
-    });
-    return result;
-};
-
-/**
  * Create directory.
  * @param dir Directory path.
  */
 const createDirectorySync = (dir: string): void => {
-    fs.mkdir(dir, { recursive: true }, (error) => {
-        if (error) {
-            // oxlint-disable-next-line no-console
-            console.error("[rehype-og-card] Failed to copy files: ", error);
-        }
-    });
+    mkdirSync(dir, { recursive: true });
 };
 
 /**
@@ -48,15 +31,15 @@ const createDirectorySync = (dir: string): void => {
  * @param destination Destination directory.
  */
 const copyDirectory = (source: string, destination: string): void => {
-    const sourceExists = checkFileExistsSync(source);
+    const sourceExists = existsSync(source);
     if (!sourceExists) return;
 
-    const destinationExists = checkFileExistsSync(destination);
+    const destinationExists = existsSync(destination);
     if (!destinationExists) {
         createDirectorySync(destination);
     }
 
-    fs.cp(source, destination, { recursive: true }, (error) => {
+    cp(source, destination, { recursive: true }, (error) => {
         if (error) {
             // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Failed to copy files: ", error);
@@ -81,4 +64,4 @@ const generateFilename = (url: string, extension = true): string => {
     return filename;
 };
 
-export { checkFileExists, checkFileExistsSync, createDirectorySync, copyDirectory, generateFilename };
+export { checkFileExists, createDirectorySync, copyDirectory, generateFilename };

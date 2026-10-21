@@ -1,164 +1,165 @@
-import { createServer, IncomingMessage, ServerResponse } from "http";
+import { createServer } from "node:http";
+import { h } from "hastscript";
+import { once } from "node:events";
+import { toHtml } from "hast-util-to-html";
 
 const TEST_SERVER_PORT = 3456;
+const TEST_ORIGIN = `http://127.0.0.1:${TEST_SERVER_PORT}`;
 
-const TEST_HTML = `<!DOCTYPE html>
+const createHTML = ({ image = `${TEST_ORIGIN}/test-image.png`, favicon = "/favicon.ico" } = {}) => {
+    return `<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="http://127.0.0.1:3456/test-image.png">
+    ${toHtml(h("meta", { property: "og:image", content: image }))}
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Test image alt text">
-    <link rel="icon" href="/favicon.ico">
+    ${toHtml(h("link", { rel: "icon", href: favicon }))}
     <title>Test Page Title</title>
 </head>
-<body>
-    <h1>Test Page</h1>
-    <p>This is a test page for rehype-og-card testing.</p>
-</body>
 </html>`;
+};
 
-const NON_IMAGE_HTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta property="og:title" content="Test Page Title">
-    <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="http://127.0.0.1:3456/not-image">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Not an image">
-    <link rel="icon" href="/favicon.ico">
-    <title>Test Page Title</title>
-</head>
-<body>
-    <h1>Test Page</h1>
-    <p>This is a test page for rehype-og-card testing.</p>
-</body>
-</html>`;
-
-const NON_FAVICON_HTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta property="og:title" content="Test Page Title">
-    <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="http://127.0.0.1:3456/test-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Test image alt text">
-    <link rel="icon" href="/not-image">
-    <title>Test Page Title</title>
-</head>
-<body>
-    <h1>Test Page</h1>
-    <p>This is a test page for rehype-og-card testing.</p>
-</body>
-</html>`;
-
-const SIMPLE_HTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <title>Example Domain</title>
-</head>
-<body>
-    <h1>Example Domain</h1>
-    <p>This domain is for use in illustrative examples in documents.</p>
-</body>
-</html>`;
-
-// Create a simple 1x1 PNG image (base64 encoded)
 const SIMPLE_PNG = Buffer.from(
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
     "base64"
 );
 
-let server: ReturnType<typeof createServer> | null = null;
+const changingSVGRequests = new Map<string, number>();
 
-export const startTestServer = (): Promise<void> => {
-    return new Promise((resolve) => {
-        server = createServer((req: IncomingMessage, res: ServerResponse) => {
-            // Handle CORS for testing
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const server = createServer((req, res) => {
+    const { pathname, searchParams } = new URL(req.url ?? "/", TEST_ORIGIN);
 
-            if (req.method === "OPTIONS") {
-                res.writeHead(200);
-                res.end();
-                return;
-            }
+    res.setHeader("Content-Type", "text/html");
 
-            switch (req.url) {
-                case "/test-page":
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.end(TEST_HTML);
-                    break;
+    if (pathname.startsWith("/svg-fixture/")) {
+        const width = Number(searchParams.get("width") ?? 2400);
+        const height = Number(searchParams.get("height") ?? 1256);
 
-                case "/test-page-non-image":
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.end(NON_IMAGE_HTML);
-                    break;
-                case "/test-page-non-favicon":
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.end(NON_FAVICON_HTML);
-                    break;
+        const changingKey = searchParams.get("changing");
+        let color = "red";
 
-                case "/simple-page":
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.end(SIMPLE_HTML);
-                    break;
+        if (changingKey) {
+            const requests = (changingSVGRequests.get(changingKey) ?? 0) + 1;
+            changingSVGRequests.set(changingKey, requests);
 
-                case "/test-image.png":
-                    res.writeHead(200, { "Content-Type": "image/png" });
-                    res.end(SIMPLE_PNG);
-                    break;
-
-                case "/not-image":
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.end("<!doctype html><p>not an image</p>");
-                    break;
-
-                case "/forbidden-image":
-                    res.writeHead(403, { "Content-Type": "text/plain" });
-                    res.end("Forbidden");
-                    break;
-
-                case "/favicon.ico":
-                    res.writeHead(200, { "Content-Type": "image/png" });
-                    res.end(SIMPLE_PNG);
-                    break;
-
-                default:
-                    res.writeHead(404, { "Content-Type": "text/plain" });
-                    res.end("Not Found");
-            }
-        });
-
-        server.listen(TEST_SERVER_PORT, "127.0.0.1", () => {
-            resolve();
-        });
-    });
-};
-
-export const stopTestServer = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (server) {
-            server.close((err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    server = null;
-                    resolve();
-                }
-            });
-        } else {
-            resolve();
+            color = requests === 1 ? "blue" : "red";
         }
-    });
+
+        const svg = `<svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="${width}"
+            height="${height}"
+            onload="alert(document.domain)"
+        >
+            <script>alert(document.domain)</script>
+            <rect width="50%" height="50%" fill="${color}"/>
+        </svg>`;
+
+        res.setHeader("Content-Type", searchParams.get("mime") ?? "image/svg+xml");
+        res.end(searchParams.has("invalid") ? "not an SVG" : svg);
+
+        return;
+    }
+
+    switch (pathname) {
+        case "/test-page":
+            res.end(createHTML());
+
+            break;
+
+        case "/test-page-non-image":
+            res.end(createHTML({ image: `${TEST_ORIGIN}/not-image` }));
+
+            break;
+
+        case "/test-page-non-favicon":
+            res.end(createHTML({ favicon: "/not-image" }));
+
+            break;
+
+        case "/simple-page":
+            res.end(`<!doctype html>
+<html>
+<head>
+    <link rel="icon" href="/favicon.ico">
+    <title>Example Domain</title>
+</head>
+</html>`);
+
+            break;
+
+        case "/svg-page": {
+            const image =
+                Buffer.from(searchParams.get("image") ?? "", "base64url").toString() || "/svg-fixture/image.svg";
+
+            const favicon =
+                Buffer.from(searchParams.get("favicon") ?? "", "base64url").toString() ||
+                "/svg-fixture/favicon.svg?width=32&height=16";
+
+            res.end(createHTML({ image, favicon }));
+
+            break;
+        }
+
+        case "/svg-redirect":
+            res.writeHead(302, { Location: "/svg-fixture/redirected.svg?mime=image%2Fpng" });
+
+            res.end();
+
+            break;
+
+        case "/svg-changing-count":
+            res.setHeader("Content-Type", "text/plain");
+
+            res.end(String(changingSVGRequests.get(searchParams.get("key") ?? "") ?? 0));
+
+            break;
+
+        case "/test-image.png":
+        case "/favicon.ico":
+            res.setHeader("Content-Type", "image/png");
+
+            res.end(SIMPLE_PNG);
+
+            break;
+
+        case "/not-image":
+            res.end("<!doctype html><p>not an image</p>");
+
+            break;
+
+        case "/forbidden-image":
+            res.writeHead(403, { "Content-Type": "text/plain" });
+
+            res.end("Forbidden");
+
+            break;
+
+        default:
+            res.writeHead(404, { "Content-Type": "text/plain" });
+
+            res.end("Not Found");
+    }
+});
+
+const startTestServer = async (): Promise<void> => {
+    server.listen(TEST_SERVER_PORT, "127.0.0.1");
+    await once(server, "listening");
 };
+
+const stopTestServer = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+        server.close((error) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve();
+            }
+        });
+    });
+
+export { startTestServer, stopTestServer };
