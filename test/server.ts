@@ -1,27 +1,52 @@
-import { createServer } from "node:http";
+import { type ServerResponse, createServer } from "node:http";
 import { h } from "hastscript";
 import { once } from "node:events";
 import { toHtml } from "hast-util-to-html";
 
-const TEST_SERVER_PORT = 3456;
-const TEST_ORIGIN = `http://127.0.0.1:${TEST_SERVER_PORT}`;
+const TEST_SERVER_URL = new URL("http://127.0.0.1:3456");
+const TEST_SERVER_PORT = Number(TEST_SERVER_URL.port);
+const TEST_ORIGIN = TEST_SERVER_URL.origin;
 
-const createHTML = ({ image = `${TEST_ORIGIN}/test-image.png`, favicon = "/favicon.ico" } = {}) => {
-    return `<!doctype html>
+/** Default dimensions of the SVG fixture. */
+const SVG_DEFAULT_WIDTH = "2400";
+const SVG_DEFAULT_HEIGHT = "1256";
+
+/**
+ * Request count before the changing SVG is served for the first time, and the
+ * increment of the count applied on each request.
+ */
+const REQUEST_COUNT_INITIAL = 0;
+const REQUEST_COUNT_INCREMENT = 1;
+
+/** HTTP status codes used by the test server. */
+const HTTP_FOUND = 302;
+const HTTP_FORBIDDEN = 403;
+const HTTP_NOT_FOUND = 404;
+
+/**
+ * Create the HTML of a test page embedding the specified OG image and favicon.
+ * @param options - URLs of the OG image and favicon embedded in the page.
+ * @param options.image - URL of the OG image embedded in the page.
+ * @param options.favicon - URL of the favicon embedded in the page.
+ * @returns The HTML of the test page.
+ */
+const createHTML = ({
+    image = `${TEST_ORIGIN}/test-image.png`,
+    favicon = "/favicon.ico"
+} = {}): string => `<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
-    ${toHtml(h("meta", { property: "og:image", content: image }))}
+    ${toHtml(h("meta", { content: image, property: "og:image" }))}
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Test image alt text">
-    ${toHtml(h("link", { rel: "icon", href: favicon }))}
+    ${toHtml(h("link", { href: favicon, rel: "icon" }))}
     <title>Test Page Title</title>
 </head>
 </html>`;
-};
 
 const SIMPLE_PNG = Buffer.from(
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
@@ -30,26 +55,29 @@ const SIMPLE_PNG = Buffer.from(
 
 const changingSVGRequests = new Map<string, number>();
 
-const server = createServer((req, res) => {
-    const { pathname, searchParams } = new URL(req.url ?? "/", TEST_ORIGIN);
+/**
+ * Serve the SVG fixture to test the SVG handling options. The fixture emulates
+ * a malicious SVG, and its fill color changes on the first request when the
+ * "changing" query parameter is specified.
+ * @param res - The response to write the SVG fixture to.
+ * @param searchParams - Query parameters to customize the SVG fixture.
+ */
+const sendSvgFixture = (res: ServerResponse, searchParams: URLSearchParams): void => {
+    const width = searchParams.get("width") ?? SVG_DEFAULT_WIDTH;
+    const height = searchParams.get("height") ?? SVG_DEFAULT_HEIGHT;
 
-    res.setHeader("Content-Type", "text/html");
+    const changingKey = searchParams.get("changing");
+    let color = "red";
 
-    if (pathname.startsWith("/svg-fixture/")) {
-        const width = Number(searchParams.get("width") ?? 2400);
-        const height = Number(searchParams.get("height") ?? 1256);
+    if (changingKey) {
+        const requestCount = changingSVGRequests.get(changingKey) ?? REQUEST_COUNT_INITIAL;
 
-        const changingKey = searchParams.get("changing");
-        let color = "red";
+        changingSVGRequests.set(changingKey, requestCount + REQUEST_COUNT_INCREMENT);
 
-        if (changingKey) {
-            const requests = (changingSVGRequests.get(changingKey) ?? 0) + 1;
-            changingSVGRequests.set(changingKey, requests);
+        color = requestCount === REQUEST_COUNT_INITIAL ? "blue" : "red";
+    }
 
-            color = requests === 1 ? "blue" : "red";
-        }
-
-        const svg = `<svg
+    const svg = `<svg
             xmlns="http://www.w3.org/2000/svg"
             width="${width}"
             height="${height}"
@@ -59,8 +87,38 @@ const server = createServer((req, res) => {
             <rect width="50%" height="50%" fill="${color}"/>
         </svg>`;
 
-        res.setHeader("Content-Type", searchParams.get("mime") ?? "image/svg+xml");
-        res.end(searchParams.has("invalid") ? "not an SVG" : svg);
+    res.setHeader("Content-Type", searchParams.get("mime") ?? "image/svg+xml");
+    res.end(searchParams.has("invalid") ? "not an SVG" : svg);
+};
+
+/**
+ * Serve a test page whose OG image and favicon URLs are specified as Base64
+ * URL-encoded query parameters.
+ * @param res - The response to write the test page to.
+ * @param searchParams - Query parameters to specify the image and favicon URLs.
+ */
+const sendSvgPage = (res: ServerResponse, searchParams: URLSearchParams): void => {
+    const imageParam = searchParams.get("image");
+    const faviconParam = searchParams.get("favicon");
+
+    const image =
+        imageParam === null ? "/svg-fixture/image.svg" : Buffer.from(imageParam, "base64url").toString();
+
+    const favicon =
+        faviconParam === null
+            ? "/svg-fixture/favicon.svg?width=32&height=16"
+            : Buffer.from(faviconParam, "base64url").toString();
+
+    res.end(createHTML({ favicon, image }));
+};
+
+const server = createServer((req, res) => {
+    const { pathname, searchParams } = new URL(req.url ?? "/", TEST_ORIGIN);
+
+    res.setHeader("Content-Type", "text/html");
+
+    if (pathname.startsWith("/svg-fixture/")) {
+        sendSvgFixture(res, searchParams);
 
         return;
     }
@@ -92,21 +150,13 @@ const server = createServer((req, res) => {
 
             break;
 
-        case "/svg-page": {
-            const image =
-                Buffer.from(searchParams.get("image") ?? "", "base64url").toString() || "/svg-fixture/image.svg";
-
-            const favicon =
-                Buffer.from(searchParams.get("favicon") ?? "", "base64url").toString() ||
-                "/svg-fixture/favicon.svg?width=32&height=16";
-
-            res.end(createHTML({ image, favicon }));
+        case "/svg-page":
+            sendSvgPage(res, searchParams);
 
             break;
-        }
 
         case "/svg-redirect":
-            res.writeHead(302, { Location: "/svg-fixture/redirected.svg?mime=image%2Fpng" });
+            res.writeHead(HTTP_FOUND, { Location: "/svg-fixture/redirected.svg?mime=image%2Fpng" });
 
             res.end();
 
@@ -115,7 +165,9 @@ const server = createServer((req, res) => {
         case "/svg-changing-count":
             res.setHeader("Content-Type", "text/plain");
 
-            res.end(String(changingSVGRequests.get(searchParams.get("key") ?? "") ?? 0));
+            res.end(
+                String(changingSVGRequests.get(searchParams.get("key") ?? "") ?? REQUEST_COUNT_INITIAL)
+            );
 
             break;
 
@@ -133,24 +185,26 @@ const server = createServer((req, res) => {
             break;
 
         case "/forbidden-image":
-            res.writeHead(403, { "Content-Type": "text/plain" });
+            res.writeHead(HTTP_FORBIDDEN, { "Content-Type": "text/plain" });
 
             res.end("Forbidden");
 
             break;
 
         default:
-            res.writeHead(404, { "Content-Type": "text/plain" });
+            res.writeHead(HTTP_NOT_FOUND, { "Content-Type": "text/plain" });
 
             res.end("Not Found");
     }
 });
 
+/** Start the test HTTP server and wait until it starts listening. */
 const startTestServer = async (): Promise<void> => {
-    server.listen(TEST_SERVER_PORT, "127.0.0.1");
+    server.listen(TEST_SERVER_PORT, TEST_SERVER_URL.hostname);
     await once(server, "listening");
 };
 
+/** Stop the test HTTP server and wait until it is closed. */
 const stopTestServer = (): Promise<void> =>
     new Promise((resolve, reject) => {
         server.close((error) => {
