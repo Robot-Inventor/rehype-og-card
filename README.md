@@ -2,20 +2,20 @@
 
 Rehype plugin to convert text links to link cards inspired by [remark-link-card](https://github.com/gladevise/remark-link-card). Bare links are converted to link cards, but not links in lists or non-bare links.
 
-| Features                                       |                                     remark-link-card                                      | rehype-og-card |
-| :--------------------------------------------- | :---------------------------------------------------------------------------------------: | :------------: |
-| Plugin type                                    |                                          Remark                                           |     Rehype     |
-| TypeScript support                             |                                             ❌                                             |       ✅        |
-| Convert bare links to link cards               |                                             ✅                                             |       ✅        |
-| Shorten URLs displayed on link cards           |                                             ✅                                             |       ✅        |
-| Server-side cache for images                   |                                             ✅                                             |       ✅        |
-| Cache images with long URLs                    | ❌ ([implemented](https://github.com/gladevise/remark-link-card/pull/16) but not released) |       ✅        |
-| Build cache for Open Graph metadata and images |                                             ❌                                             |       ✅        |
-| Exclude links in lists from conversion         |                                             ❌                                             |       ✅        |
-| Exclude specific domains from conversion       |                                             ❌                                             |       ✅        |
-| Lazy loading images                            |                                             ❌                                             |       ✅        |
-| Async decoding images                          |                                             ❌                                             |       ✅        |
-| Customize the crawler's user agent string      |                                             ❌                                             |       ✅        |
+| Features                                       |                                      remark-link-card                                      | rehype-og-card |
+| :--------------------------------------------- | :----------------------------------------------------------------------------------------: | :------------: |
+| Plugin type                                    |                                           Remark                                           |     Rehype     |
+| TypeScript support                             |                                             ❌                                             |       ✅       |
+| Convert bare links to link cards               |                                             ✅                                             |       ✅       |
+| Shorten URLs displayed on link cards           |                                             ✅                                             |       ✅       |
+| Server-side cache for images                   |                                             ✅                                             |       ✅       |
+| Cache images with long URLs                    | ❌ ([implemented](https://github.com/gladevise/remark-link-card/pull/16) but not released) |       ✅       |
+| Build cache for Open Graph metadata and images |                                             ❌                                             |       ✅       |
+| Exclude links in lists from conversion         |                                             ❌                                             |       ✅       |
+| Exclude specific domains from conversion       |                                             ❌                                             |       ✅       |
+| Lazy loading images                            |                                             ❌                                             |       ✅       |
+| Async decoding images                          |                                             ❌                                             |       ✅       |
+| Customize the crawler's user agent string      |                                             ❌                                             |       ✅       |
 
 ## Installation
 
@@ -113,7 +113,7 @@ Whether to cache the OG metadata and images for the next build. `buildCache` opt
 Path to save the build cache. For Astro projects, specify the `./node_modules/.astro` directory.
 
 - Type: `string`
-- Default: `"./.cache/og-card"`
+- Default: `"./node_modules/.cache"`
 
 ### `buildCacheMaxAge`
 
@@ -200,3 +200,24 @@ Whether to shorten the displayed URL.
 
 - Type: `boolean`
 - Default: `true`
+
+### `svgHandling`
+
+How to handle SVG OG images and favicons when `serverCache` is enabled.
+
+- Type: `"omit" | "preserve" | "rasterize"`
+- Default: `"rasterize"`
+
+| Value         | Behavior                                                               |
+| ------------- | ---------------------------------------------------------------------- |
+| `"omit"`      | Treat SVG as a missing image. The rest of the card is still generated. |
+| `"preserve"`  | Save the original SVG without modification.                            |
+| `"rasterize"` | Convert SVG to a PNG. Omit the image if conversion fails.              |
+
+If the `"rasterize"` option is selected, external resources referenced by the target SVG image will not be loaded. If `serverCache: false` is set, the image URL remains unchanged in the output, and the `svgHandling` settings are not applied.
+
+#### Security Considerations
+
+rehype-og-card embeds images using `<img>` tags. If `svgHandling: "preserve"` is selected, there is a risk that any scripts contained within an embedded SVG file could be executed if a user opens that file directly. It is recommended to clear the server cache after switching the `svgHandling` mode.
+
+When `serverCache: true` is enabled, your server controls the response headers for cached images. Please ensure that the correct `Content-Type` and `X-Content-Type-Options: nosniff` headers are included when serving these images.

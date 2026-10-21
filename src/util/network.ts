@@ -1,9 +1,10 @@
+import type { OGCardData, RehypeOGCardOptions } from "../types.js";
 import { checkFileExists, generateFilename } from "./file.js";
 import { isCacheExpired, readCacheIndex, writeCacheIndex } from "./cache.js";
-import type { OGCardData } from "../types.js";
 import fetch from "node-fetch";
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { rasterizeSVG } from "./svg.js";
 import scraper from "open-graph-scraper";
 
 /**
@@ -90,7 +91,40 @@ interface DownloadImageOptions {
      * Set to `false` to disable expiration.
      */
     cacheMaxAge: number | false;
+    /**
+     * How to handle SVG images.
+     * @default "rasterize"
+     */
+    svgHandling?: RehypeOGCardOptions["svgHandling"];
 }
+
+/**
+ * Restore an unexpired cached image.
+ * @param options Image cache options.
+ * @param filenames Possible cached image filenames.
+ * @returns Cached filename, or `null` if no valid file exists.
+ */
+const restoreImageCache = async (options: DownloadImageOptions, filenames: Set<string>): Promise<string | null> => {
+    const index = await readCacheIndex(options.directory);
+    const cached = await Promise.all(
+        [...filenames].map(async (filename) => {
+            const cachedPath = path.join(options.directory, filename);
+            if (!(await checkFileExists(cachedPath))) return null;
+
+            const cachedAt = index[filename]?.createdAt;
+            if (
+                options.cacheMaxAge === false ||
+                (typeof cachedAt === "number" && !isCacheExpired(cachedAt, options.cacheMaxAge))
+            ) {
+                return filename;
+            }
+
+            await fs.rm(cachedPath, { force: true });
+            return null;
+        })
+    );
+    return cached.find((filename) => filename !== null) ?? null;
+};
 
 /**
  * Download image from given URL. If the image already exists, return the filename.
@@ -106,29 +140,13 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
     }
 
     try {
-        const filename = generateFilename(options.url);
-        const savePath = path.posix.join(options.directory, filename);
+        const svgHandling = options.svgHandling ?? "rasterize";
+        const stem = generateFilename(options.url, false);
+        let filename = generateFilename(options.url);
+        const candidates = new Set([filename, `${stem}.png`]);
 
-        // If the file already exists, return the filename.
-        const fileExists = await checkFileExists(savePath);
-        if (fileExists) {
-            if (options.cacheMaxAge === false) return filename;
-
-            const index = await readCacheIndex(options.directory);
-
-            const entry = index[filename];
-            const cachedAt = entry?.createdAt;
-            const maxAge = options.cacheMaxAge;
-            if (typeof cachedAt === "number" && !isCacheExpired(cachedAt, maxAge)) return filename;
-
-            if (typeof entry !== "undefined") {
-                // oxlint-disable-next-line @typescript-eslint/no-dynamic-delete
-                delete index[filename];
-                await writeCacheIndex(options.directory, index);
-            }
-
-            await fs.rm(savePath, { force: true });
-        }
+        const cachedFilename = await restoreImageCache(options, candidates);
+        if (cachedFilename) return cachedFilename;
 
         const response = await fetch(options.url, {
             headers: {
@@ -141,8 +159,13 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         if (!response.ok) return null;
 
         const contentType = response.headers.get("content-type");
-        const normalizedContentType = contentType?.split(";")[0]?.trim().toLowerCase();
-        if (!normalizedContentType?.startsWith("image/")) {
+        const normalizedContentType = contentType?.replace(/;.*/u, "").trim().toLowerCase();
+        const isSVG =
+            normalizedContentType === "image/svg+xml" ||
+            [options.url, response.url].some((url) => path.extname(new URL(url).pathname).toLowerCase() === ".svg");
+        if (isSVG && svgHandling === "omit") return null;
+
+        if (!isSVG && !normalizedContentType?.startsWith("image/")) {
             // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Invalid image content type:", contentType ?? "unknown", "for", options.url);
             return null;
@@ -150,12 +173,14 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
 
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-
-        const saveDirectoryExists = await checkFileExists(options.directory);
-        if (!saveDirectoryExists) {
-            await fs.mkdir(options.directory, { recursive: true });
+        const shouldRasterize = isSVG && svgHandling === "rasterize";
+        const imageBuffer = shouldRasterize ? await rasterizeSVG(buffer) : buffer;
+        if (shouldRasterize) {
+            filename = `${stem}.png`;
         }
-        await fs.writeFile(savePath, buffer);
+
+        await fs.mkdir(options.directory, { recursive: true });
+        await fs.writeFile(path.join(options.directory, filename), imageBuffer);
 
         const cachedAt = Date.now();
         const index = await readCacheIndex(options.directory);

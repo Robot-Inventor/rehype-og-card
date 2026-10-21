@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "lint": "oxlint ./src",
+    "lint": "oxlint src",
     "format": "prettier --write ./src/**/*",
     "format:check": "prettier --check ./src/**/*",
     "build": "tsc",
@@ -45,6 +45,7 @@
     "@robot-inventor/oxlint-config": "^0.5.2",
     "@robot-inventor/tsconfig-base": "^7.2.0",
     "@types/node": "^26.6.5",
+    "cheerio": "^1.2.0",
     "hast-util-to-html": "^9.0.5",
     "oxlint": "^1.89.0",
     "prettier": "^3.9.10",
@@ -62,6 +63,7 @@
     "hastscript": "^9.0.1",
     "node-fetch": "^3.3.2",
     "open-graph-scraper": "^6.12.0",
+    "sharp": "^0.35.5",
     "unist-util-visit-parents": "^6.0.2"
   }
 }

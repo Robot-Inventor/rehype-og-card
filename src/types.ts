@@ -42,6 +42,18 @@ interface RehypeOGCardOptions {
      */
     serverCache?: boolean;
     /**
+     * How to handle SVG OG images and favicons when server caching is enabled.
+     *
+     * - `"omit"`: Treat SVG as a missing image. The rest of the card is still generated.
+     * - `"preserve"`: Save the original SVG without modification.
+     * - `"rasterize"`: Convert SVG to a PNG. Omit the image if conversion fails.
+     *
+     * If the `"rasterize"` option is selected, external resources referenced by the target SVG image will not be loaded.
+     * If `serverCache: false` is set, the image URL remains unchanged in the output, and the `svgHandling` settings are not applied.
+     * @default "rasterize"
+     */
+    svgHandling?: "omit" | "preserve" | "rasterize";
+    /**
      * Path to save the server cache.
      * Specify the directory whose contents will be copied to the root.
      * For example, for an Astro project, specify the `public` directory.

@@ -146,7 +146,7 @@ export const startTestServer = (): Promise<void> => {
     });
 };
 
-export const stopTestServer = (): Promise<void> => {
+const stopTestServer = (): Promise<void> => {
     return new Promise((resolve, reject) => {
         if (server) {
             server.close((err) => {
@@ -162,3 +162,5 @@ export const stopTestServer = (): Promise<void> => {
         }
     });
 };
+
+export { startTestServer, stopTestServer };

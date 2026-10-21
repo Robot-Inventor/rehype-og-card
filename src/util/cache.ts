@@ -1,10 +1,21 @@
 /* oxlint-disable max-lines */
 import { type CacheIndex, type OGCardData, parseCacheIndex } from "../types.js";
 import { checkFileExists, generateFilename } from "./file.js";
-import fs from "fs/promises";
-import fsSync from "fs";
-import path from "path";
-import { setTimeout } from "timers/promises";
+import {
+    closeSync,
+    cpSync,
+    existsSync,
+    mkdirSync,
+    openSync,
+    readFileSync,
+    readdirSync,
+    renameSync,
+    rmSync,
+    writeFileSync
+} from "node:fs";
+import { copyFile, mkdir, open, readFile, rename, rm, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { setTimeout } from "node:timers/promises";
 import { type } from "arktype";
 
 /**
@@ -65,10 +76,10 @@ const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<
      */
     const tryAcquire = async (attempt: number): Promise<(() => Promise<void>) | null> => {
         try {
-            const handle = await fs.open(lockPath, "wx");
+            const handle = await open(lockPath, "wx");
             await handle.close();
             return async () => {
-                await fs.rm(lockPath, { force: true });
+                await rm(lockPath, { force: true });
             };
         } catch (error) {
             const err = error as NodeJS.ErrnoException;
@@ -101,10 +112,10 @@ const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
      */
     const tryAcquire = (attempt: number): (() => void) | null => {
         try {
-            const fd = fsSync.openSync(lockPath, "wx");
-            fsSync.closeSync(fd);
+            const fd = openSync(lockPath, "wx");
+            closeSync(fd);
             return () => {
-                fsSync.rmSync(lockPath, { force: true });
+                rmSync(lockPath, { force: true });
             };
         } catch (error) {
             const err = error as NodeJS.ErrnoException;
@@ -126,7 +137,7 @@ const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
 const readCacheIndexSync = (directory: string): CacheIndex => {
     const indexPath = getCacheIndexPath(directory);
     try {
-        const raw = fsSync.readFileSync(indexPath, "utf-8");
+        const raw = readFileSync(indexPath, "utf-8");
         const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
         return validated;
@@ -145,8 +156,8 @@ const writeCacheIndexSync = (directory: string, index: CacheIndex): void => {
     const tempPath = `${indexPath}.tmp`;
     const releaseLock = acquireCacheIndexLockSync(directory);
     try {
-        fsSync.writeFileSync(tempPath, JSON.stringify(index));
-        fsSync.renameSync(tempPath, indexPath);
+        writeFileSync(tempPath, JSON.stringify(index));
+        renameSync(tempPath, indexPath);
     } finally {
         releaseLock?.();
     }
@@ -162,7 +173,7 @@ const readCacheIndex = async (directory: string): Promise<CacheIndex> => {
     const exists = await checkFileExists(indexPath);
     if (!exists) return {};
     try {
-        const raw = await fs.readFile(indexPath, "utf-8");
+        const raw = await readFile(indexPath, "utf-8");
         const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
         return validated;
@@ -181,8 +192,8 @@ const writeCacheIndex = async (directory: string, index: CacheIndex): Promise<vo
     const tempPath = `${indexPath}.tmp`;
     const releaseLock = await acquireCacheIndexLock(directory);
     try {
-        await fs.writeFile(tempPath, JSON.stringify(index));
-        await fs.rename(tempPath, indexPath);
+        await writeFile(tempPath, JSON.stringify(index));
+        await rename(tempPath, indexPath);
     } finally {
         await releaseLock?.();
     }
@@ -195,7 +206,7 @@ const writeCacheIndex = async (directory: string, index: CacheIndex): Promise<vo
  */
 const removeCacheEntrySync = (directory: string, filename: string): void => {
     const filePath = path.join(directory, filename);
-    fsSync.rmSync(filePath, { force: true });
+    rmSync(filePath, { force: true });
 };
 
 /**
@@ -206,12 +217,12 @@ const removeCacheEntrySync = (directory: string, filename: string): void => {
 // oxlint-disable-next-line max-statements
 const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false): void => {
     if (maxAgeMs === false) return;
-    if (!fsSync.existsSync(directory)) return;
+    if (!existsSync(directory)) return;
 
     const index = readCacheIndexSync(directory);
     let indexUpdated = false;
 
-    const entries = fsSync.readdirSync(directory, { withFileTypes: true });
+    const entries = readdirSync(directory, { withFileTypes: true });
     for (const entry of entries) {
         const entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) {
@@ -225,20 +236,20 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
 
         if (entry.name.endsWith(".json")) {
             try {
-                const raw = fsSync.readFileSync(entryPath, "utf-8");
+                const raw = readFileSync(entryPath, "utf-8");
                 const data = JSON.parse(raw) as { cachedAt?: number };
 
                 if (typeof data.cachedAt !== "number") {
-                    fsSync.rmSync(entryPath, { force: true });
+                    rmSync(entryPath, { force: true });
                     // oxlint-disable-next-line no-continue
                     continue;
                 }
 
                 if (isCacheExpired(data.cachedAt, maxAgeMs)) {
-                    fsSync.rmSync(entryPath, { force: true });
+                    rmSync(entryPath, { force: true });
                 }
             } catch {
-                fsSync.rmSync(entryPath, { force: true });
+                rmSync(entryPath, { force: true });
             }
 
             // oxlint-disable-next-line no-continue
@@ -266,21 +277,15 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
  */
 const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
     const serverCacheExists = await checkFileExists(serverCachePath);
-    const buildCacheExists = await checkFileExists(buildCachePath);
-    if (serverCacheExists && !buildCacheExists) {
-        await fs.copyFile(serverCachePath, buildCachePath);
-    }
-    const buildCacheExistsAfter = await checkFileExists(buildCachePath);
-    if (!buildCacheExistsAfter) return;
+    if (!serverCacheExists) return;
+    await copyFile(serverCachePath, buildCachePath);
 
     const serverDirectory = path.dirname(serverCachePath);
     const buildDirectory = path.dirname(buildCachePath);
     const filename = path.basename(buildCachePath);
     const serverIndex = readCacheIndexSync(serverDirectory);
-    const cachedAt =
-        typeof serverIndex[filename]?.createdAt === "number" ? serverIndex[filename].createdAt : Date.now();
     const buildIndex = readCacheIndexSync(buildDirectory);
-    buildIndex[filename] = { createdAt: cachedAt };
+    buildIndex[filename] = { createdAt: serverIndex[filename]?.createdAt ?? Date.now() };
     writeCacheIndexSync(buildDirectory, buildIndex);
 };
 
@@ -291,15 +296,15 @@ const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: strin
  * @param maxAgeMs Cache expiration time in milliseconds.
  */
 const restoreBuildCache = (buildCachePath: string, serverCachePath: string, maxAgeMs: number | false): void => {
-    if (!fsSync.existsSync(buildCachePath)) return;
+    if (!existsSync(buildCachePath)) return;
 
     pruneExpiredCacheFilesSync(buildCachePath, maxAgeMs);
 
-    if (!fsSync.existsSync(serverCachePath)) {
-        fsSync.mkdirSync(serverCachePath, { recursive: true });
+    if (!existsSync(serverCachePath)) {
+        mkdirSync(serverCachePath, { recursive: true });
     }
 
-    fsSync.cpSync(buildCachePath, serverCachePath, { recursive: true });
+    cpSync(buildCachePath, serverCachePath, { recursive: true });
 };
 
 /**
@@ -313,10 +318,10 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
     const savePath = `${path.join(buildCachePath, filename)}.json`;
     const cacheDirectoryExists = await checkFileExists(buildCachePath);
     if (!cacheDirectoryExists) {
-        await fs.mkdir(buildCachePath, { recursive: true });
+        await mkdir(buildCachePath, { recursive: true });
     }
     const payload = { ...OGData, cachedAt: Date.now() };
-    await fs.writeFile(savePath, JSON.stringify(payload));
+    await writeFile(savePath, JSON.stringify(payload));
 };
 
 /**
@@ -335,19 +340,19 @@ const restoreOGDataBuildCache = async (
     const savePath = `${path.join(buildCachePath, filename)}.json`;
 
     try {
-        const data = await fs.readFile(savePath, "utf-8");
+        const data = await readFile(savePath, "utf-8");
         const parsed = JSON.parse(data) as OGCardData & { cachedAt?: number };
         if (typeof parsed.cachedAt !== "number") {
             if (maxAgeMs === false) {
                 const { cachedAt: __, ...rest } = parsed;
                 return rest;
             }
-            await fs.rm(savePath, { force: true });
+            await rm(savePath, { force: true });
             return null;
         }
 
         if (isCacheExpired(parsed.cachedAt, maxAgeMs)) {
-            await fs.rm(savePath, { force: true });
+            await rm(savePath, { force: true });
             return null;
         }
 
