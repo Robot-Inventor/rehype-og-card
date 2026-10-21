@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
+import { h } from "hastscript";
 import { once } from "node:events";
+import { toHtml } from "hast-util-to-html";
 
 const TEST_SERVER_PORT = 3456;
 const TEST_ORIGIN = `http://127.0.0.1:${TEST_SERVER_PORT}`;
@@ -11,11 +13,11 @@ const createHTML = ({ image = `${TEST_ORIGIN}/test-image.png`, favicon = "/favic
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
-    <meta property="og:image" content="${image.replaceAll("&", "&amp;")}">
+    ${toHtml(h("meta", { property: "og:image", content: image }))}
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Test image alt text">
-    <link rel="icon" href="${favicon.replaceAll("&", "&amp;")}">
+    ${toHtml(h("link", { rel: "icon", href: favicon }))}
     <title>Test Page Title</title>
 </head>
 </html>`;
@@ -34,8 +36,8 @@ const server = createServer((req, res) => {
     res.setHeader("Content-Type", "text/html");
 
     if (pathname.startsWith("/svg-fixture/")) {
-        const width = searchParams.get("width") ?? "2400";
-        const height = searchParams.get("height") ?? "1256";
+        const width = Number(searchParams.get("width") ?? 2400);
+        const height = Number(searchParams.get("height") ?? 1256);
 
         const changingKey = searchParams.get("changing");
         let color = "red";
