@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 4.0.1
+
+### Patch Changes
+
+- [#566](https://github.com/Robot-Inventor/rehype-og-card/pull/566) [`53025ec`](https://github.com/Robot-Inventor/rehype-og-card/commit/53025ec4ea7e3bae65d31a3f278cc49b0e92af0f) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency unist-util-visit-parents to ^6.1.0
+
 ## 4.0.0
 
 ### Major Changes
