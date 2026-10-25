@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 4.0.2
+
+### Patch Changes
+
+- [#570](https://github.com/Robot-Inventor/rehype-og-card/pull/570) [`8df86d2`](https://github.com/Robot-Inventor/rehype-og-card/commit/8df86d2caff242478ff3bbcc96a00b531a76c6c1) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: fix a broken publishing process
+
 ## 4.0.1
 
 ### Patch Changes
