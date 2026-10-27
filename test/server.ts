@@ -101,8 +101,7 @@ const sendSvgPage = (res: ServerResponse, searchParams: URLSearchParams): void =
     const imageParam = searchParams.get("image");
     const faviconParam = searchParams.get("favicon");
 
-    const image =
-        imageParam === null ? "/svg-fixture/image.svg" : Buffer.from(imageParam, "base64url").toString();
+    const image = imageParam === null ? "/svg-fixture/image.svg" : Buffer.from(imageParam, "base64url").toString();
 
     const favicon =
         faviconParam === null
@@ -165,9 +164,7 @@ const server = createServer((req, res) => {
         case "/svg-changing-count":
             res.setHeader("Content-Type", "text/plain");
 
-            res.end(
-                String(changingSVGRequests.get(searchParams.get("key") ?? "") ?? REQUEST_COUNT_INITIAL)
-            );
+            res.end(String(changingSVGRequests.get(searchParams.get("key") ?? "") ?? REQUEST_COUNT_INITIAL));
 
             break;
 
