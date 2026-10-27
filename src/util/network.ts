@@ -184,7 +184,9 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
 
         const cachedAt = Date.now();
         const index = await readCacheIndex(options.directory);
-        index[filename] = { createdAt: cachedAt };
+        index[filename] = {
+            createdAt: cachedAt
+        };
         await writeCacheIndex(options.directory, index);
 
         return filename;

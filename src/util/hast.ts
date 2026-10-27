@@ -58,7 +58,7 @@ const createOGCard = (
     const openInNewTab = {
         rel: "noopener noreferrer",
         target: "_blank"
-    };
+    } as const;
 
     const card = h("div.og-card-container", [
         h("a", { href: data.url, ...(options.openInNewTab ? openInNewTab : {}) }, [
