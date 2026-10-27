@@ -285,7 +285,9 @@ const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: strin
     const filename = path.basename(buildCachePath);
     const serverIndex = readCacheIndexSync(serverDirectory);
     const buildIndex = readCacheIndexSync(buildDirectory);
-    buildIndex[filename] = { createdAt: serverIndex[filename]?.createdAt ?? Date.now() };
+    buildIndex[filename] = {
+        createdAt: serverIndex[filename]?.createdAt ?? Date.now()
+    };
     writeCacheIndexSync(buildDirectory, buildIndex);
 };
 
@@ -320,7 +322,10 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
     if (!cacheDirectoryExists) {
         await mkdir(buildCachePath, { recursive: true });
     }
-    const payload = { ...OGData, cachedAt: Date.now() };
+    const payload = {
+        ...OGData,
+        cachedAt: Date.now()
+    } as const;
     await writeFile(savePath, JSON.stringify(payload));
 };
 
