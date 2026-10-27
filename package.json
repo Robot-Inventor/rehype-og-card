@@ -2,58 +2,42 @@
   "name": "rehype-og-card",
   "version": "4.0.2",
   "description": "Rehype plugin to convert text links to link cards",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "keywords": [
+    "markdown",
+    "ogp",
+    "rehype",
+    "rehype-plugin",
+    "remark",
+    "unified"
+  ],
+  "homepage": "https://github.com/Robot-Inventor/rehype-og-card#readme",
+  "bugs": {
+    "url": "https://github.com/Robot-Inventor/rehype-og-card/issues"
+  },
+  "license": "MIT",
+  "author": "Robot-Inventor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Robot-Inventor/rehype-og-card.git"
+  },
   "files": [
     "dist"
   ],
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "publishConfig": {
     "provenance": true
   },
   "scripts": {
     "test": "vitest",
     "lint": "oxlint src test",
-    "format": "prettier --write ./src/**/*",
-    "format:check": "prettier --check ./src/**/*",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
     "build": "tsc",
     "version": "npm run build && git add .",
     "ci:version": "changeset version && npm run version",
     "ci:publish": "npm run build && changeset publish"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Robot-Inventor/rehype-og-card.git"
-  },
-  "keywords": [
-    "markdown",
-    "remark",
-    "ogp",
-    "unified",
-    "rehype",
-    "rehype-plugin"
-  ],
-  "author": "Robot-Inventor",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Robot-Inventor/rehype-og-card/issues"
-  },
-  "homepage": "https://github.com/Robot-Inventor/rehype-og-card#readme",
-  "devDependencies": {
-    "@changesets/changelog-github": "^1.0.1",
-    "@changesets/cli": "^3.0.3",
-    "@robot-inventor/oxlint-config": "^1.1.0",
-    "@robot-inventor/tsconfig-base": "^7.2.0",
-    "@types/node": "^26.6.5",
-    "hast-util-to-html": "^9.0.5",
-    "oxlint": "^1.90.0",
-    "prettier": "^3.9.10",
-    "rehype-stringify": "^10.0.1",
-    "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.2",
-    "typescript": "^7.0.2",
-    "unified": "^11.0.5",
-    "vitest": "^5.0.5"
   },
   "dependencies": {
     "@types/hast": "^3.0.5",
@@ -64,5 +48,21 @@
     "open-graph-scraper": "^6.12.0",
     "sharp": "^0.35.5",
     "unist-util-visit-parents": "^6.1.0"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
+    "@robot-inventor/oxlint-config": "^1.1.0",
+    "@robot-inventor/tsconfig-base": "^7.2.0",
+    "@types/node": "^26.6.5",
+    "hast-util-to-html": "^9.0.5",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "typescript": "^7.0.2",
+    "unified": "^11.0.5",
+    "vitest": "^5.0.5"
   }
 }
