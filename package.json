@@ -1,6 +1,6 @@
 {
   "name": "rehype-og-card",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Rehype plugin to convert text links to link cards",
   "keywords": [
     "markdown",
