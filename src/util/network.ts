@@ -13,10 +13,10 @@ import scraper from "open-graph-scraper";
  * @returns `true` if the URL is valid, `false` otherwise.
  */
 const isValidURL = (url: string): boolean => {
-    const ALLOWED_PROTOCOLS = ["http:", "https:"];
+    const ALLOWED_PROTOCOLS = new Set(["http:", "https:"]);
     const parsedUrl = URL.parse(url);
 
-    return Boolean(parsedUrl && ALLOWED_PROTOCOLS.includes(parsedUrl.protocol));
+    return Boolean(parsedUrl && ALLOWED_PROTOCOLS.has(parsedUrl.protocol));
 };
 
 /**
@@ -112,10 +112,10 @@ const restoreImageCache = async (options: DownloadImageOptions, filenames: Set<s
             if (!(await checkFileExists(cachedPath))) return null;
 
             const cachedAt = index[filename]?.createdAt;
-            if (
+            const shouldReturnCached =
                 options.cacheMaxAge === false ||
-                (typeof cachedAt === "number" && !isCacheExpired(cachedAt, options.cacheMaxAge))
-            ) {
+                (typeof cachedAt === "number" && !isCacheExpired(cachedAt, options.cacheMaxAge));
+            if (shouldReturnCached) {
                 return filename;
             }
 
