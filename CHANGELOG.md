@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 4.0.3
+
+### Patch Changes
+
+- [#577](https://github.com/Robot-Inventor/rehype-og-card/pull/577) [`ae66e07`](https://github.com/Robot-Inventor/rehype-og-card/commit/ae66e074cf8fb98f76cfb0c9f0db70bd17bc746d) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - refactor: improve performance and extract complex conditions
+
 ## 4.0.2
 
 ### Patch Changes
