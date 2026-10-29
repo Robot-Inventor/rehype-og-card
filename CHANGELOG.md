@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 4.0.4
+
+### Patch Changes
+
+- [#580](https://github.com/Robot-Inventor/rehype-og-card/pull/580) [`8ed4af9`](https://github.com/Robot-Inventor/rehype-og-card/commit/8ed4af9781925e739aa7f5b6754cc054a39d8ce4) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency hast-util-to-html to ^9.0.6
+
+- [#581](https://github.com/Robot-Inventor/rehype-og-card/pull/581) [`40d89ab`](https://github.com/Robot-Inventor/rehype-og-card/commit/40d89ab4c67353993adf9970fbdfa0f2299f3a06) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency hastscript to ^9.0.2
+
 ## 4.0.3
 
 ### Patch Changes
