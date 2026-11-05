@@ -5,6 +5,7 @@ import {
     isAnchorElement,
     isTextNode
 } from "./util/hast.js";
+// oxlint-disable-next-line roboin/logical-newline
 import type { Plugin, Transformer } from "unified";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
 import { join, posix } from "node:path";
@@ -116,6 +117,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             const shouldSkip = ancestors.some(
                 (ancestor) => isElement(ancestor) && ["ul", "ol"].includes(ancestor.tagName)
             );
+
             if (shouldSkip) return;
 
             // oxlint-disable-next-line no-magic-numbers
@@ -125,7 +127,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
             const targetURL = new URL(anchorNode.properties.href);
             if (mergedOptions.excludeDomains.includes(targetURL.hostname)) return;
 
-            // oxlint-disable-next-line max-statements jsdoc-js/require-jsdoc
+            // oxlint-disable-next-line max-statements
             const linkCardPromise = async (): Promise<void> => {
                 let OGData = mergedOptions.buildCache
                     ? await restoreOGDataBuildCache(
@@ -138,6 +140,7 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 if (!OGData) {
                     OGData = await getOGData(anchorNode.properties.href, mergedOptions.crawlerUserAgent);
                     if (!OGData) return;
+
                     if (mergedOptions.buildCache) {
                         await saveOGDataBuildCache(anchorNode.properties.href, OGData, mergedOptions.buildCachePath);
                     }
@@ -203,9 +206,11 @@ const rehypeOGCard: Plugin<[RehypeOGCardOptions | undefined], Root> = (
                 const index = replacementContainer.children.indexOf(replacementTarget);
                 // oxlint-disable-next-line no-magic-numbers
                 if (index === -1) return;
+
                 // oxlint-disable-next-line no-magic-numbers
                 replacementContainer.children.splice(index, 1, OGCard);
             };
+
             linkCardPromises.push(linkCardPromise());
         });
 
