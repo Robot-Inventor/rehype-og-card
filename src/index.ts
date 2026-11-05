@@ -5,7 +5,6 @@ import {
     isAnchorElement,
     isTextNode
 } from "./util/hast.js";
-// oxlint-disable-next-line roboin/logical-newline
 import type { Plugin, Transformer } from "unified";
 import { downloadImage, getOGData, isValidURL } from "./util/network.js";
 import { join, posix } from "node:path";
