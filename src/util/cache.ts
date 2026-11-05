@@ -13,6 +13,7 @@ import {
     rmSync,
     writeFileSync
 } from "node:fs";
+// oxlint-disable-next-line roboin/logical-newline
 import { copyFile, mkdir, open, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout } from "node:timers/promises";
@@ -26,6 +27,7 @@ import { type } from "arktype";
  */
 const isCacheExpired = (cachedAtMs: number, maxAgeMs: number | false): boolean => {
     if (maxAgeMs === false) return false;
+
     return Date.now() - cachedAtMs > maxAgeMs;
 };
 
@@ -78,6 +80,7 @@ const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<
         try {
             const handle = await open(lockPath, "wx");
             await handle.close();
+
             return async () => {
                 await rm(lockPath, { force: true });
             };
@@ -85,7 +88,9 @@ const acquireCacheIndexLock = async (directory: string): Promise<(() => Promise<
             const err = error as NodeJS.ErrnoException;
             if (err.code !== "EEXIST") throw error;
             if (attempt >= maxRetries) return null;
+
             await setTimeout(delayMs);
+
             return tryAcquire(attempt + nextAttemptIncrement);
         }
     };
@@ -114,6 +119,7 @@ const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
         try {
             const fd = openSync(lockPath, "wx");
             closeSync(fd);
+
             return () => {
                 rmSync(lockPath, { force: true });
             };
@@ -121,7 +127,9 @@ const acquireCacheIndexLockSync = (directory: string): (() => void) | null => {
             const err = error as NodeJS.ErrnoException;
             if (err.code !== "EEXIST") throw error;
             if (attempt >= maxRetries) return null;
+
             sleepSync(delayMs);
+
             return tryAcquire(attempt + nextAttemptIncrement);
         }
     };
@@ -140,6 +148,7 @@ const readCacheIndexSync = (directory: string): CacheIndex => {
         const raw = readFileSync(indexPath, "utf-8");
         const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
+
         return validated;
     } catch {
         return {};
@@ -172,10 +181,12 @@ const readCacheIndex = async (directory: string): Promise<CacheIndex> => {
     const indexPath = getCacheIndexPath(directory);
     const exists = await checkFileExists(indexPath);
     if (!exists) return {};
+
     try {
         const raw = await readFile(indexPath, "utf-8");
         const validated = parseCacheIndex(raw);
         if (validated instanceof type.errors) return {};
+
         return validated;
     } catch {
         return {};
@@ -278,6 +289,7 @@ const pruneExpiredCacheFilesSync = (directory: string, maxAgeMs: number | false)
 const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: string): Promise<void> => {
     const serverCacheExists = await checkFileExists(serverCachePath);
     if (!serverCacheExists) return;
+
     await copyFile(serverCachePath, buildCachePath);
 
     const serverDirectory = path.dirname(serverCachePath);
@@ -288,6 +300,7 @@ const saveBuildCacheFile = async (serverCachePath: string, buildCachePath: strin
     buildIndex[filename] = {
         createdAt: serverIndex[filename]?.createdAt ?? Date.now()
     };
+
     writeCacheIndexSync(buildDirectory, buildIndex);
 };
 
@@ -322,10 +335,12 @@ const saveOGDataBuildCache = async (url: string, OGData: OGCardData, buildCacheP
     if (!cacheDirectoryExists) {
         await mkdir(buildCachePath, { recursive: true });
     }
+
     const payload = {
         ...OGData,
         cachedAt: Date.now()
     } as const;
+
     await writeFile(savePath, JSON.stringify(payload));
 };
 
@@ -350,18 +365,23 @@ const restoreOGDataBuildCache = async (
         if (typeof parsed.cachedAt !== "number") {
             if (maxAgeMs === false) {
                 const { cachedAt: __, ...rest } = parsed;
+
                 return rest;
             }
+
             await rm(savePath, { force: true });
+
             return null;
         }
 
         if (isCacheExpired(parsed.cachedAt, maxAgeMs)) {
             await rm(savePath, { force: true });
+
             return null;
         }
 
         const { cachedAt: __, ...rest } = parsed;
+
         return rest;
     } catch {
         return null;

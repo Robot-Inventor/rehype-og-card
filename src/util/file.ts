@@ -11,6 +11,7 @@ import path from "node:path";
 const checkFileExists = async (filePath: string): Promise<boolean> => {
     try {
         await access(filePath);
+
         return true;
     } catch {
         return false;
@@ -60,7 +61,9 @@ const generateFilename = (url: string, extension = true): string => {
     const extensionString = allowedExtensions.includes(possibleExtension as (typeof allowedExtensions)[number])
         ? possibleExtension
         : "";
+
     const filename = extension ? hash + extensionString : hash;
+
     return filename;
 };
 

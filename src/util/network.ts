@@ -30,6 +30,7 @@ const resolveAbsoluteURL = (rawURL: string | undefined, baseURL: string): string
     if (!rawURL) return undefined;
 
     const parsedUrl = URL.parse(rawURL, baseURL);
+
     // oxlint-disable-next-line no-undefined
     return parsedUrl ? parsedUrl.href : undefined;
 };
@@ -50,10 +51,12 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             },
             url
         });
+
         const OGImage = result.ogImage ? result.ogImage[0] : null;
         const OGImageURL = resolveAbsoluteURL(OGImage?.url, url);
         const resolvedFaviconURL = result.favicon ? resolveAbsoluteURL(result.favicon, url) : null;
         const faviconURL = resolvedFaviconURL ?? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`;
+
         return {
             OGImageAlt: OGImage?.alt,
             OGImageHeight: OGImage?.height,
@@ -69,6 +72,7 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
     } catch (error) {
         // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Error fetching OG data:", error);
+
         return null;
     }
 };
@@ -115,14 +119,17 @@ const restoreImageCache = async (options: DownloadImageOptions, filenames: Set<s
             const shouldReturnCached =
                 options.cacheMaxAge === false ||
                 (typeof cachedAt === "number" && !isCacheExpired(cachedAt, options.cacheMaxAge));
+
             if (shouldReturnCached) {
                 return filename;
             }
 
             await fs.rm(cachedPath, { force: true });
+
             return null;
         })
     );
+
     return cached.find((filename) => filename !== null) ?? null;
 };
 
@@ -136,6 +143,7 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
     if (!isValidURL(options.url)) {
         // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Invalid thumbnail URL:", options.url);
+
         return null;
     }
 
@@ -163,11 +171,13 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         const isSVG =
             normalizedContentType === "image/svg+xml" ||
             [options.url, response.url].some((url) => path.extname(new URL(url).pathname).toLowerCase() === ".svg");
+
         if (isSVG && svgHandling === "omit") return null;
 
         if (!isSVG && !normalizedContentType?.startsWith("image/")) {
             // oxlint-disable-next-line no-console
             console.error("[rehype-og-card] Invalid image content type:", contentType ?? "unknown", "for", options.url);
+
             return null;
         }
 
@@ -187,12 +197,14 @@ const downloadImage = async (options: DownloadImageOptions): Promise<string | nu
         index[filename] = {
             createdAt: cachedAt
         };
+
         await writeCacheIndex(options.directory, index);
 
         return filename;
     } catch (error) {
         // oxlint-disable-next-line no-console
         console.error("[rehype-og-card] Error downloading image:", error);
+
         return null;
     }
 };
