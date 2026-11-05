@@ -13,7 +13,6 @@ import {
     rmSync,
     writeFileSync
 } from "node:fs";
-// oxlint-disable-next-line roboin/logical-newline
 import { copyFile, mkdir, open, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout } from "node:timers/promises";
