@@ -1,5 +1,11 @@
 # rehype-og-card
 
+## 4.0.5
+
+### Patch Changes
+
+- [#600](https://github.com/Robot-Inventor/rehype-og-card/pull/600) [`ed82535`](https://github.com/Robot-Inventor/rehype-og-card/commit/ed825354993a2803580614f5f35b28de455b8909) Thanks [@Robot-Inventor](https://github.com/Robot-Inventor)! - fix: resolve relative OG image and favicon URLs against the final page URL and `<base href>`
+
 ## 4.0.4
 
 ### Patch Changes
