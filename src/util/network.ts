@@ -3,6 +3,7 @@ import { checkFileExists, generateFilename } from "./file.js";
 import { isCacheExpired, readCacheIndex, writeCacheIndex } from "./cache.js";
 import fetch from "node-fetch";
 import fs from "node:fs/promises";
+import { load } from "cheerio";
 import path from "node:path";
 import { rasterizeSVG } from "./svg.js";
 import scraper from "open-graph-scraper";
@@ -43,7 +44,7 @@ const resolveAbsoluteURL = (rawURL: string | undefined, baseURL: string): string
  */
 const getOGData = async (url: string, userAgent: string): Promise<OGCardData | null> => {
     try {
-        const { result } = await scraper({
+        const { html, response, result } = await scraper({
             fetchOptions: {
                 headers: {
                     "user-agent": userAgent
@@ -52,9 +53,18 @@ const getOGData = async (url: string, userAgent: string): Promise<OGCardData | n
             url
         });
 
+        if (typeof html !== "string") throw new Error("The scraper did not return the fetched HTML.");
+        if (!("url" in response)) throw new Error("The scraper did not return a response URL.");
+
+        const responseURL = response.url;
+        if (typeof responseURL !== "string") throw new Error("The scraper did not return a valid response URL.");
+        if (!responseURL) throw new Error("The scraper did not return a valid response URL.");
+
+        const baseHref = load(html)("base[href]").first().attr("href");
+        const baseURL = resolveAbsoluteURL(baseHref, responseURL) ?? responseURL;
         const OGImage = result.ogImage ? result.ogImage[0] : null;
-        const OGImageURL = resolveAbsoluteURL(OGImage?.url, url);
-        const resolvedFaviconURL = result.favicon ? resolveAbsoluteURL(result.favicon, url) : null;
+        const OGImageURL = resolveAbsoluteURL(OGImage?.url, baseURL);
+        const resolvedFaviconURL = result.favicon ? resolveAbsoluteURL(result.favicon, baseURL) : null;
         const faviconURL = resolvedFaviconURL ?? `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`;
 
         return {
