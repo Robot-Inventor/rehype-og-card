@@ -26,16 +26,19 @@ const HTTP_NOT_FOUND = 404;
 /**
  * Create the HTML of a test page embedding the specified OG image and favicon.
  * @param options - URLs of the OG image and favicon embedded in the page.
+ * @param options.base - Optional document base URL.
  * @param options.image - URL of the OG image embedded in the page.
  * @param options.favicon - URL of the favicon embedded in the page.
  * @returns The HTML of the test page.
  */
 const createHTML = ({
+    base,
     image = `${TEST_ORIGIN}/test-image.png`,
     favicon = "/favicon.ico"
-} = {}): string => `<!doctype html>
+}: { base?: string; image?: string; favicon?: string } = {}): string => `<!doctype html>
 <html lang="en">
 <head>
+    ${base ? toHtml(h("base", { href: base })) : ""}
     <meta charset="UTF-8">
     <meta property="og:title" content="Test Page Title">
     <meta property="og:description" content="This is a test page description for OG card testing">
@@ -111,6 +114,46 @@ const sendSvgPage = (res: ServerResponse, searchParams: URLSearchParams): void =
     res.end(createHTML({ favicon, image }));
 };
 
+const sendRedirectFixture = (pathname: string, res: ServerResponse): boolean => {
+    switch (pathname) {
+        case "/redirect-to-final-page":
+            res.writeHead(HTTP_FOUND, { Location: "http://localhost:3456/final-page" });
+            res.end();
+
+            return true;
+
+        case "/redirect-to-base-page":
+            res.writeHead(HTTP_FOUND, { Location: "http://localhost:3456/final/base-page" });
+            res.end();
+
+            return true;
+
+        case "/final-page":
+            res.end(
+                createHTML({
+                    favicon: "../assets/favicon.ico",
+                    image: "../assets/og-image.png"
+                })
+            );
+
+            return true;
+
+        case "/final/base-page":
+            res.end(
+                createHTML({
+                    base: "assets/",
+                    favicon: "favicon.ico",
+                    image: "og-image.png"
+                })
+            );
+
+            return true;
+
+        default:
+            return false;
+    }
+};
+
 const server = createServer((req, res) => {
     const { pathname, searchParams } = new URL(req.url ?? "/", TEST_ORIGIN);
 
@@ -121,6 +164,8 @@ const server = createServer((req, res) => {
 
         return;
     }
+
+    if (sendRedirectFixture(pathname, res)) return;
 
     switch (pathname) {
         case "/test-page":

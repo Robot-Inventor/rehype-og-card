@@ -43,6 +43,30 @@ http://127.0.0.1:3456/test-page
     expect(result.toString().trim()).toBe(expected);
 });
 
+it("resolves relative card resources against the page URL after a redirect", async () => {
+    const processor = processorFactory({ serverCache: false });
+    const input = "http://127.0.0.1:3456/redirect-to-final-page";
+
+    const result = await processor.process(input);
+    const html = result.toString();
+
+    expect(html).toContain(`<a href="${input}">`);
+    expect(html).toContain('src="http://localhost:3456/assets/og-image.png"');
+    expect(html).toContain('src="http://localhost:3456/assets/favicon.ico"');
+});
+
+it("resolves relative card resources against the page base href", async () => {
+    const processor = processorFactory({ serverCache: false });
+    const input = "http://127.0.0.1:3456/redirect-to-base-page";
+
+    const result = await processor.process(input);
+    const html = result.toString();
+
+    expect(html).toContain(`<a href="${input}">`);
+    expect(html).toContain('src="http://localhost:3456/final/assets/og-image.png"');
+    expect(html).toContain('src="http://localhost:3456/final/assets/favicon.ico"');
+});
+
 it("`removeParentPTag` option should keep parent <p> when disabled", async () => {
     const processor = processorFactory({ removeParentPTag: false, serverCache: false });
 

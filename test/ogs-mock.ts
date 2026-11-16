@@ -1,4 +1,4 @@
-import type { OpenGraphScraperOptions } from "open-graph-scraper/types";
+import type { ErrorResult, OpenGraphScraperOptions, SuccessResult } from "open-graph-scraper/types";
 import { vi } from "vitest";
 
 // open-graph-scraper 6.13.0 blocks requests to loopback addresses to prevent SSRF,
@@ -7,7 +7,7 @@ import { vi } from "vitest";
 vi.mock("open-graph-scraper", async (importOriginal) => {
     // Vitest exposes the CommonJS `export =` function as the `default` export.
     const ogScraper = await importOriginal<{
-        default: (options: OpenGraphScraperOptions) => Promise<unknown>;
+        default: (options: OpenGraphScraperOptions) => Promise<ErrorResult | SuccessResult>;
     }>();
 
     /**
@@ -21,7 +21,13 @@ vi.mock("open-graph-scraper", async (importOriginal) => {
 
         if (!response.ok) throw new Error(`Failed to fetch ${options.url}: ${response.status.toString()}`);
 
-        return ogScraper.default({ html: await response.text() });
+        const result = await ogScraper.default({ html: await response.text() });
+        if (result.error) throw new Error("Failed to scrape the test fixture.");
+
+        return {
+            ...result,
+            response
+        };
     };
 
     return {

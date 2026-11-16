@@ -19,9 +19,13 @@ it("should invalidate invalid URL", async () => {
     expect(isValidURL("data:text/plain,Hello%2C%20World!")).toBe(false);
 });
 
-it("resolves root-relative og:image URLs against the page origin", async () => {
+it("resolves root-relative og:image URLs against the fetched page URL", async () => {
     vi.resetModules();
     const mockScraper = vi.fn().mockResolvedValue({
+        html: "<html></html>",
+        response: {
+            url: "https://example.invalid/blog/post"
+        },
         result: {
             favicon: undefined,
             ogDescription: "Description",
