@@ -1,5 +1,13 @@
 # rehype-og-card
 
+## 4.0.6
+
+### Patch Changes
+
+- [#603](https://github.com/Robot-Inventor/rehype-og-card/pull/603) [`3b9dd80`](https://github.com/Robot-Inventor/rehype-og-card/commit/3b9dd80d2fe9375bbaac54fa8aa948d7b7c6f046) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency arktype to ^2.2.10
+
+- [#604](https://github.com/Robot-Inventor/rehype-og-card/pull/604) [`89d3419`](https://github.com/Robot-Inventor/rehype-og-card/commit/89d341975675fe5279779a7a2f362cc002efbe00) Thanks [@renovate](https://github.com/apps/renovate)! - chore(deps): update dependency hast-util-to-html to ^9.0.7
+
 ## 4.0.5
 
 ### Patch Changes
