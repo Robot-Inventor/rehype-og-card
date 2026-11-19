@@ -56,7 +56,7 @@
     "@robot-inventor/oxlint-config": "^2.2.0",
     "@robot-inventor/tsconfig-base": "^7.2.0",
     "@types/node": "^26.6.6",
-    "hast-util-to-html": "^9.0.6",
+    "hast-util-to-html": "^9.0.7",
     "oxfmt": "^0.79.0",
     "oxlint": "^1.94.0",
     "rehype-stringify": "^10.0.1",
