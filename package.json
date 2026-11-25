@@ -64,6 +64,6 @@
     "remark-rehype": "^11.1.2",
     "typescript": "^7.0.2",
     "unified": "^11.0.5",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.2"
   }
 }
